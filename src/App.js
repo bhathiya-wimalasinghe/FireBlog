@@ -4,6 +4,7 @@ import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import Authors from "./pages/Authors";
 import Write from "./pages/Write";
+import SignIn from "./pages/SignIn";
 
 function App() {
   return (
@@ -11,7 +12,8 @@ function App() {
       <TopBar />
       {/* <Home /> */}
       {/* <Authors /> */}
-      <Write />
+      {/* <Write /> */}
+      <SignIn />
       <Footer />
     </div>
   );
