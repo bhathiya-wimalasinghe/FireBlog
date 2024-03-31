@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import Authors from "./pages/Authors";
 import Write from "./pages/Write";
 import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
 
 function App() {
   return (
@@ -13,7 +14,8 @@ function App() {
       {/* <Home /> */}
       {/* <Authors /> */}
       {/* <Write /> */}
-      <SignIn />
+      {/* <SignIn /> */}
+      <SignUp />
       <Footer />
     </div>
   );
