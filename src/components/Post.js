@@ -12,6 +12,7 @@ export default function Post(props) {
       sx={{
         maxWidth: "100%",
         border: "1px solid transparent",
+        borderRadius: "20px",
         ":hover": {
           border: "1px solid gray",
           cursor: "pointer",
