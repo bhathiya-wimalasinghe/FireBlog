@@ -5,8 +5,11 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { Avatar, Box, CardActions } from "@mui/material";
 import { BookmarkBorder } from "@mui/icons-material";
+import PropTypes from "prop-types";
 
 export default function Post(props) {
+  const { img, title, content, userImg, uploadedDate, userName } = props;
+
   return (
     <Card
       sx={{
@@ -24,12 +27,12 @@ export default function Post(props) {
         component="img"
         alt="green iguana"
         height="140"
-        image={props.img}
+        image={img}
         sx={{ height: 240 }}
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-          {props.title}
+          {title}
         </Typography>
 
         <Typography
@@ -43,7 +46,7 @@ export default function Post(props) {
             WebkitBoxOrient: "vertical",
           }}
         >
-          {props.content}
+          {content}
         </Typography>
       </CardContent>
       <CardActions
@@ -54,13 +57,13 @@ export default function Post(props) {
         }}
       >
         <Box display={"flex"}>
-          <Avatar src={props.userImg} />
+          <Avatar src={userImg} />
           <Box ml={2}>
             <Typography variant="subtitle2" component="p">
-              {props.userName}
+              {userName}
             </Typography>
             <Typography variant="subtitle2" color="textSecondary" component="p">
-              {props.uploadedDate}
+              {uploadedDate}
             </Typography>
           </Box>
         </Box>
@@ -71,3 +74,12 @@ export default function Post(props) {
     </Card>
   );
 }
+
+Post.propTypes = {
+  img: PropTypes.object.isRequired,
+  title: PropTypes.string.isRequired,
+  content: PropTypes.string.isRequired,
+  userImg: PropTypes.object.isRequired,
+  uploadedDate: PropTypes.string.isRequired,
+  userName: PropTypes.string.isRequired,
+};
