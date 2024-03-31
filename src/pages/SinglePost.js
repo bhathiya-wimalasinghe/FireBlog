@@ -52,9 +52,6 @@ export default function SinglePost() {
                 img={postImg}
                 title="This is sample Title"
                 content="This is sample content. This is sample content. This is sample content."
-                userImg={userImg}
-                uploadedDate="1 hour ago"
-                userName="Bhathiya Wimalasinghe"
               />
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
@@ -62,9 +59,6 @@ export default function SinglePost() {
                 img={postImg}
                 title="This is sample Title"
                 content="This is sample content. This is sample content. This is sample content."
-                userImg={userImg}
-                uploadedDate="1 hour ago"
-                userName="Bhathiya Wimalasinghe"
               />
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
@@ -72,9 +66,6 @@ export default function SinglePost() {
                 img={postImg}
                 title="This is sample Title"
                 content="This is sample content. This is sample content. This is sample content."
-                userImg={userImg}
-                uploadedDate="1 hour ago"
-                userName="Bhathiya Wimalasinghe"
               />
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
@@ -82,9 +73,6 @@ export default function SinglePost() {
                 img={postImg}
                 title="This is sample Title"
                 content="This is sample content. This is sample content. This is sample content."
-                userImg={userImg}
-                uploadedDate="1 hour ago"
-                userName="Bhathiya Wimalasinghe"
               />
             </Grid>
           </Grid>

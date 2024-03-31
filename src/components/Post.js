@@ -56,20 +56,23 @@ export default function Post(props) {
           justifyContent: "space-between",
         }}
       >
-        <Box display={"flex"}>
-          <Avatar src={userImg} />
-          <Box ml={2}>
-            <Typography variant="subtitle2" component="p">
-              {userName}
-            </Typography>
-            <Typography variant="subtitle2" color="textSecondary" component="p">
-              {uploadedDate}
-            </Typography>
+        {userName && (
+          <Box display={"flex"}>
+            <Avatar src={userImg} />
+            <Box ml={2}>
+              <Typography variant="subtitle2" component="p">
+                {userName}
+              </Typography>
+              <Typography
+                variant="subtitle2"
+                color="textSecondary"
+                component="p"
+              >
+                {uploadedDate}
+              </Typography>
+            </Box>
           </Box>
-        </Box>
-        <Box>
-          <BookmarkBorder />
-        </Box>
+        )}
       </CardActions>
     </Card>
   );
@@ -79,7 +82,7 @@ Post.propTypes = {
   img: PropTypes.object.isRequired,
   title: PropTypes.string.isRequired,
   content: PropTypes.string.isRequired,
-  userImg: PropTypes.object.isRequired,
-  uploadedDate: PropTypes.string.isRequired,
-  userName: PropTypes.string.isRequired,
+  userImg: PropTypes.object,
+  uploadedDate: PropTypes.string,
+  userName: PropTypes.string,
 };
