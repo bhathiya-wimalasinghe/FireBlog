@@ -7,6 +7,7 @@ import Write from "./pages/Write";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import SinglePost from "./pages/SinglePost";
+import Posts from "./pages/Posts";
 
 function App() {
   return (
@@ -17,7 +18,8 @@ function App() {
       {/* <Write /> */}
       {/* <SignIn /> */}
       {/* <SignUp /> */}
-      <SinglePost />
+      {/* <SinglePost /> */}
+      <Posts />
       <Footer />
     </div>
   );

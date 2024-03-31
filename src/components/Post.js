@@ -4,7 +4,7 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { Avatar, Box, CardActions } from "@mui/material";
-import { BookmarkBorder } from "@mui/icons-material";
+import { BookmarkBorder, Scale } from "@mui/icons-material";
 import PropTypes from "prop-types";
 
 export default function Post(props) {
@@ -28,7 +28,11 @@ export default function Post(props) {
         alt="green iguana"
         height="140"
         image={img}
-        sx={{ height: 240 }}
+        sx={{
+          height: 240,
+          transition: "transform 0.3s ease-in-out",
+          ":hover": { transform: "scale(1.05)" },
+        }}
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
@@ -79,10 +83,10 @@ export default function Post(props) {
 }
 
 Post.propTypes = {
-  img: PropTypes.object.isRequired,
+  img: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   content: PropTypes.string.isRequired,
-  userImg: PropTypes.object,
+  userImg: PropTypes.string,
   uploadedDate: PropTypes.string,
   userName: PropTypes.string,
 };

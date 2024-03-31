@@ -15,8 +15,12 @@ export default function AuthorMini(props) {
     >
       <Avatar src={userImg} sx={{ margin: 1, height: "50px", width: "50px" }} />
       <Box margin={1}>
-        <Typography variant="h6">By {name}</Typography>
-        <Typography>Published {publishedDate} </Typography>
+        <Typography sx={{ typography: { sm: "body1", xs: "body2" } }}>
+          By {name}
+        </Typography>
+        <Typography sx={{ typography: { sm: "body1", xs: "body2" } }}>
+          Published {publishedDate}{" "}
+        </Typography>
       </Box>
     </Box>
   );

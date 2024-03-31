@@ -86,7 +86,7 @@ export default function TopBar() {
                 </MenuItem>
                 <MenuItem sx={{ py: "6px", px: "12px" }}>
                   <Typography variant="body2" color="text.primary">
-                    My Profile
+                    Posts
                   </Typography>
                 </MenuItem>
               </Box>
@@ -150,7 +150,7 @@ export default function TopBar() {
                   <MenuItem>About</MenuItem>
                   <MenuItem>Authors</MenuItem>
                   <MenuItem>Write</MenuItem>
-                  <MenuItem>My Profile</MenuItem>
+                  <MenuItem>Posts</MenuItem>
                   <Divider />
                   <MenuItem>
                     <Button
