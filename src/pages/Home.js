@@ -3,9 +3,9 @@ import Box from "@mui/material/Box";
 import backgroundImg from "../images/header_image.jpg";
 import logo from "../images/fireblog-logo.svg";
 import { Container, Grid } from "@mui/material";
-import Post from "../components/Post";
 import postImg from "../images/post.jpg";
 import userImg from "../images/Bhathiya_Wimalasinghe.jpg";
+import Post from "../components/Post";
 
 export default function Home() {
   return (

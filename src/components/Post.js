@@ -33,7 +33,7 @@ export default function Post(props) {
         <CardActionArea>
           <CardMedia
             component="img"
-            alt="green iguana"
+            alt="Post Image"
             height="140"
             image={img}
             sx={{

@@ -9,11 +9,13 @@ import SignUp from "./pages/SignUp";
 import SinglePost from "./pages/SinglePost";
 import Posts from "./pages/Posts";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
   return (
     <div>
       <Router>
+        <ScrollToTop />
         <TopBar />
         <Routes>
           <Route path="/" element={<Home />} />
