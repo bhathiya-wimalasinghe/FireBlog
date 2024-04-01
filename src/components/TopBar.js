@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Link } from "react-router-dom";
 
 import Box from "@mui/material/Box";
 import AppBar from "@mui/material/AppBar";
@@ -65,29 +66,39 @@ export default function TopBar() {
               <img src={img} style={logoStyle} alt="logo of fireblog" />
               <Box sx={{ display: { xs: "none", md: "flex" } }}>
                 <MenuItem sx={{ py: "6px", px: "12px" }}>
-                  <Typography variant="body2" color="text.primary">
-                    Home
-                  </Typography>
+                  <Link style={{ textDecoration: "none" }} to="/">
+                    <Typography variant="body2" color="text.primary">
+                      Home
+                    </Typography>
+                  </Link>
                 </MenuItem>
                 <MenuItem sx={{ py: "6px", px: "12px" }}>
-                  <Typography variant="body2" color="text.primary">
-                    About
-                  </Typography>
+                  <Link style={{ textDecoration: "none" }} to="/about">
+                    <Typography variant="body2" color="text.primary">
+                      About
+                    </Typography>
+                  </Link>
                 </MenuItem>
                 <MenuItem sx={{ py: "6px", px: "12px" }}>
-                  <Typography variant="body2" color="text.primary">
-                    Authors
-                  </Typography>
+                  <Link style={{ textDecoration: "none" }} to="/authors">
+                    <Typography variant="body2" color="text.primary">
+                      Authors
+                    </Typography>
+                  </Link>
                 </MenuItem>
                 <MenuItem sx={{ py: "6px", px: "12px" }}>
-                  <Typography variant="body2" color="text.primary">
-                    Write
-                  </Typography>
+                  <Link style={{ textDecoration: "none" }} to="/write">
+                    <Typography variant="body2" color="text.primary">
+                      Write
+                    </Typography>
+                  </Link>
                 </MenuItem>
                 <MenuItem sx={{ py: "6px", px: "12px" }}>
-                  <Typography variant="body2" color="text.primary">
-                    Posts
-                  </Typography>
+                  <Link style={{ textDecoration: "none" }} to="/articles">
+                    <Typography variant="body2" color="text.primary">
+                      Articles
+                    </Typography>
+                  </Link>
                 </MenuItem>
               </Box>
             </Box>
@@ -150,7 +161,7 @@ export default function TopBar() {
                   <MenuItem>About</MenuItem>
                   <MenuItem>Authors</MenuItem>
                   <MenuItem>Write</MenuItem>
-                  <MenuItem>Posts</MenuItem>
+                  <MenuItem>Articles</MenuItem>
                   <Divider />
                   <MenuItem>
                     <Button
