@@ -8,7 +8,8 @@ import {
   Box,
   ButtonBase,
   CardActionArea,
-  CardActions,
+  Chip,
+  Paper,
 } from "@mui/material";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
@@ -61,31 +62,30 @@ export default function Post(props) {
               {content}
             </Typography>
           </CardContent>
-          <CardActions
+          <Box
             sx={{
               display: "flex",
               margin: "0 10px",
               justifyContent: "space-between",
             }}
           >
-            {userName && (
-              <Box display={"flex"}>
-                <Avatar src={userImg} />
-                <Box ml={2}>
-                  <Typography variant="subtitle2" component="p">
-                    {userName}
-                  </Typography>
-                  <Typography
-                    variant="subtitle2"
-                    color="textSecondary"
-                    component="p"
-                  >
-                    {uploadedDate}
-                  </Typography>
-                </Box>
+            <Box display={"flex"}>
+              <Avatar src={userImg} />
+              <Box ml={2}>
+                <Typography variant="subtitle2" component="p">
+                  {userName}
+                </Typography>
+                <Typography
+                  variant="subtitle2"
+                  color="textSecondary"
+                  component="p"
+                >
+                  {uploadedDate}
+                </Typography>
               </Box>
-            )}
-          </CardActions>
+            </Box>
+            <Chip label="Category" />
+          </Box>
         </CardActionArea>
       </ButtonBase>
     </Card>

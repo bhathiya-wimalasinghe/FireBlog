@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Container,
   Grid,
   Pagination,
@@ -34,6 +35,28 @@ export default function Posts() {
           variant="outlined"
           fullWidth
         />
+      </Box>
+      <Box
+        margin={2}
+        display="flex"
+        justifyContent="space-around"
+        sx={{ flexDirection: { sm: "row", xs: "column" } }}
+      >
+        <Button variant="outlined" fullWidth sx={{ margin: "10px" }}>
+          Entertainment
+        </Button>
+        <Button variant="outlined" fullWidth sx={{ margin: "10px" }}>
+          Finance
+        </Button>
+        <Button variant="outlined" fullWidth sx={{ margin: "10px" }}>
+          Health
+        </Button>
+        <Button variant="outlined" fullWidth sx={{ margin: "10px" }}>
+          Technology
+        </Button>
+        <Button variant="outlined" fullWidth sx={{ margin: "10px" }}>
+          Sport
+        </Button>
       </Box>
       <Grid marginTop={3} container spacing={3}>
         <Grid item xs={12} sm={6} md={4}>

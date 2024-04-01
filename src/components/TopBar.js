@@ -40,7 +40,7 @@ export default function TopBar() {
         <Container maxWidth="lg">
           <Toolbar
             variant="regular"
-            sx={(theme) => ({
+            sx={{
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
@@ -52,7 +52,7 @@ export default function TopBar() {
               border: "1px solid",
               borderColor: "divider",
               boxShadow: `0 0 1px rgba(85, 166, 246, 0.1), 1px 1.5px 2px -1px rgba(85, 166, 246, 0.15), 4px 4px 12px -2.5px rgba(85, 166, 246, 0.15)`,
-            })}
+            }}
           >
             <Box
               sx={{
@@ -63,7 +63,9 @@ export default function TopBar() {
                 px: 0,
               }}
             >
-              <img src={img} style={logoStyle} alt="logo of fireblog" />
+              <Link to="/">
+                <img src={img} style={logoStyle} alt="logo of fireblog" />
+              </Link>
               <Box sx={{ display: { xs: "none", md: "flex" } }}>
                 <MenuItem sx={{ py: "6px", px: "12px" }}>
                   <Link style={{ textDecoration: "none" }} to="/">
