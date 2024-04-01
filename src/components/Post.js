@@ -10,16 +10,11 @@ import {
   CardActionArea,
   CardActions,
 } from "@mui/material";
-import { BookmarkBorder, Scale } from "@mui/icons-material";
 import PropTypes from "prop-types";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+
 export default function Post(props) {
   const { img, title, content, userImg, uploadedDate, userName } = props;
-  const navigate = useNavigate();
-
-  function handleClick() {
-    navigate("/singlepost");
-  }
 
   return (
     <Card
@@ -34,7 +29,7 @@ export default function Post(props) {
         },
       }}
     >
-      <ButtonBase onClick={handleClick}>
+      <ButtonBase component={Link} to="/singlepost">
         <CardActionArea>
           <CardMedia
             component="img"
