@@ -9,13 +9,12 @@ function Author(props) {
       sx={{
         display: "flex",
         alignItems: "center",
-        maxWidth: "350px",
         margin: "5px",
         ":hover": { backgroundColor: "lightgray", cursor: "pointer" },
       }}
       elevation={3}
     >
-      <Avatar src={userImg} sx={{ margin: 1, flex: "0.3", height: "50px" }} />
+      <Avatar src={userImg} sx={{ margin: 1, flex: "0.3", height: "auto" }} />
       <Box margin={1} flex={1.5}>
         <Typography variant="h6">{name}</Typography>
         <Typography>{noOfPosts} posts</Typography>

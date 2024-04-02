@@ -7,6 +7,12 @@ import postImg from "../images/post.jpg";
 import userImg from "../images/Bhathiya_Wimalasinghe.jpg";
 import Post from "../components/Post";
 
+// #03045e
+// #0077b6
+// #00b4d8
+// #90e0ef
+// #caf0f8
+
 export default function Home() {
   return (
     <div>
@@ -14,7 +20,7 @@ export default function Home() {
       <Box
         sx={{
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.5)), url(${backgroundImg})`,
-          height: "500px",
+          height: { xs: "300px", md: "500px" },
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
@@ -27,7 +33,7 @@ export default function Home() {
         }}
       >
         <img
-          style={{ width: "400px", height: "auto" }}
+          style={{ width: "400px  ", height: "auto" }}
           alt="logo-white"
           src={logo}
         />
@@ -41,7 +47,7 @@ export default function Home() {
           <Button variant="outlined">View All</Button>
         </Box>
         <Divider />
-        <Grid container spacing={3} marginTop={2} marginBottom={5}>
+        <Grid container spacing={5} marginTop={2} marginBottom={5}>
           <Grid item xs={12} sm={6} md={4}>
             <Post
               img={postImg}

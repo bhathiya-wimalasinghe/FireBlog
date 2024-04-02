@@ -18,77 +18,67 @@ export default function Post(props) {
   const { img, title, content, userImg, uploadedDate, userName } = props;
 
   return (
-    <Card
-      sx={{
-        maxWidth: "100%",
-        border: "1px solid transparent",
-        borderRadius: "20px",
-        ":hover": {
-          border: "1px solid gray",
-          cursor: "pointer",
-          backgroundColor: "lightgray",
-        },
-      }}
-    >
-      <ButtonBase component={Link} to="/singlepost">
-        <CardActionArea>
-          <CardMedia
-            component="img"
-            alt="Post Image"
-            height="140"
-            image={img}
-            sx={{
-              height: 240,
-              transition: "transform 0.3s ease-in-out",
-              ":hover": { transform: "scale(1.05)" },
-            }}
-          />
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
-              {title}
-            </Typography>
-
-            <Typography
-              variant="body2"
-              color="text.secondary"
+    <Box>
+      <Card
+        sx={{
+          maxWidth: "100%",
+          border: "1px solid transparent",
+          borderRadius: "20px",
+          backgroundColor: "#eeeeee",
+          ":hover": {
+            border: "1px solid gray",
+            cursor: "pointer",
+          },
+          padding: "10px",
+        }}
+      >
+        <ButtonBase component={Link} to="/singlepost">
+          <CardActionArea>
+            <CardMedia
+              component="img"
+              alt="Post Image"
+              height="140"
+              image={img}
               sx={{
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                display: "-webkit-box",
-                WebkitLineClamp: "4",
-                WebkitBoxOrient: "vertical",
+                height: 240,
+                transition: "transform 0.3s ease-in-out",
+                ":hover": { transform: "scale(1.05)" },
+                borderRadius: "20px",
+              }}
+            />
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                {title}
+              </Typography>
+            </CardContent>
+            <Box
+              sx={{
+                display: "flex",
+                margin: "0 10px",
+                justifyContent: "space-between",
               }}
             >
-              {content}
-            </Typography>
-          </CardContent>
-          <Box
-            sx={{
-              display: "flex",
-              margin: "0 10px",
-              justifyContent: "space-between",
-            }}
-          >
-            <Box display={"flex"}>
-              <Avatar src={userImg} />
-              <Box ml={2}>
-                <Typography variant="subtitle2" component="p">
-                  {userName}
-                </Typography>
-                <Typography
-                  variant="subtitle2"
-                  color="textSecondary"
-                  component="p"
-                >
-                  {uploadedDate}
-                </Typography>
+              <Box display={"flex"}>
+                <Avatar src={userImg} />
+                <Box ml={2}>
+                  <Typography variant="subtitle2" component="p">
+                    {userName}
+                  </Typography>
+                  <Typography
+                    variant="subtitle2"
+                    color="textSecondary"
+                    component="p"
+                  >
+                    {uploadedDate}
+                  </Typography>
+                </Box>
               </Box>
+              <Chip label="Category" />
             </Box>
-            <Chip label="Category" />
-          </Box>
-        </CardActionArea>
-      </ButtonBase>
-    </Card>
+          </CardActionArea>
+        </ButtonBase>
+      </Card>
+    </Box>
   );
 }
 

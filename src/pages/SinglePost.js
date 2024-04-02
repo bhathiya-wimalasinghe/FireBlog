@@ -86,13 +86,6 @@ export default function SinglePost() {
                 content="This is sample content. This is sample content. This is sample content."
               />
             </Grid>
-            <Grid item xs={12} sm={6} md={4}>
-              <Post
-                img={postImg}
-                title="This is sample Title"
-                content="This is sample content. This is sample content. This is sample content."
-              />
-            </Grid>
           </Grid>
         </Box>
       </Container>

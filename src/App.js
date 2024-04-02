@@ -12,6 +12,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";
 import About from "./pages/About";
 import Profile from "./pages/Profile";
+import AuthorPage from "./pages/AuthorPage";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/authors" element={<Authors />} />
+          <Route path="/authorName" element={<AuthorPage />} />
           <Route path="/write" element={<Write />} />
           <Route path="/articles" element={<Posts />} />
           <Route path="/profile" element={<Profile />} />
