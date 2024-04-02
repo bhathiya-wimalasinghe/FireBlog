@@ -11,6 +11,7 @@ import Posts from "./pages/Posts";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";
 import About from "./pages/About";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/authors" element={<Authors />} />
           <Route path="/write" element={<Write />} />
           <Route path="/articles" element={<Posts />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/singlepost" element={<SinglePost />} />

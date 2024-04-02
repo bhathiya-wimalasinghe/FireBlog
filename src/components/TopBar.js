@@ -12,6 +12,8 @@ import MenuItem from "@mui/material/MenuItem";
 import Drawer from "@mui/material/Drawer";
 import MenuIcon from "@mui/icons-material/Menu";
 import img from "../images/FireBlog.svg";
+import userImage from "../images/Bhathiya_Wimalasinghe.jpg";
+import { Avatar } from "@mui/material";
 
 const logoStyle = {
   width: "140px",
@@ -20,6 +22,7 @@ const logoStyle = {
 };
 
 export default function TopBar() {
+  const user = true;
   const [open, setOpen] = React.useState(false);
 
   const toggleDrawer = (newOpen) => () => {
@@ -111,26 +114,59 @@ export default function TopBar() {
                 alignItems: "center",
               }}
             >
-              <Button
-                color="primary"
-                variant="text"
-                size="small"
-                component="a"
-                href="/signin"
-                target="_blank"
-              >
-                Sign in
-              </Button>
-              <Button
-                color="primary"
-                variant="contained"
-                size="small"
-                component="a"
-                href="/signup"
-                target="_blank"
-              >
-                Sign up
-              </Button>
+              {user ? (
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  width="300px"
+                  justifyContent="space-around"
+                >
+                  <Button
+                    color="primary"
+                    variant="text"
+                    size="small"
+                    component={Link}
+                    to="/profile"
+                  >
+                    <Avatar
+                      alt="username"
+                      src={userImage}
+                      sx={{ marginRight: "20px" }}
+                    />
+                    My Profile
+                  </Button>
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    size="small"
+                    component={Link}
+                    to="/logout"
+                  >
+                    Log out
+                  </Button>
+                </Box>
+              ) : (
+                <div>
+                  <Button
+                    color="primary"
+                    variant="text"
+                    size="small"
+                    component={Link}
+                    to="/signin"
+                  >
+                    Sign in
+                  </Button>
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    size="small"
+                    component={Link}
+                    to="/signup"
+                  >
+                    Sign up
+                  </Button>
+                </div>
+              )}
             </Box>
             <Box sx={{ display: { sm: "", md: "none" } }}>
               <Button
@@ -138,10 +174,18 @@ export default function TopBar() {
                 color="primary"
                 aria-label="menu"
                 onClick={toggleDrawer(true)}
-                sx={{ minWidth: "30px", p: "4px" }}
+                sx={{ minWidth: "30px", p: "4px", marginLeft: "20px" }}
               >
+                {user && (
+                  <Avatar
+                    alt="username"
+                    src={userImage}
+                    sx={{ marginRight: "20px" }}
+                  />
+                )}
                 <MenuIcon />
               </Button>
+
               <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
                 <Box
                   sx={{
@@ -159,36 +203,107 @@ export default function TopBar() {
                       flexGrow: 1,
                     }}
                   ></Box>
-                  <MenuItem>Home</MenuItem>
-                  <MenuItem>About</MenuItem>
-                  <MenuItem>Authors</MenuItem>
-                  <MenuItem>Write</MenuItem>
-                  <MenuItem>Articles</MenuItem>
+                  <MenuItem>
+                    <Link
+                      style={{ textDecoration: "none", color: "black" }}
+                      to="/"
+                      onClick={toggleDrawer(false)}
+                    >
+                      Home
+                    </Link>
+                  </MenuItem>
+                  <MenuItem>
+                    <Link
+                      style={{ textDecoration: "none", color: "black" }}
+                      to="/about"
+                      onClick={toggleDrawer(false)}
+                    >
+                      About
+                    </Link>
+                  </MenuItem>
+                  <MenuItem>
+                    <Link
+                      style={{ textDecoration: "none", color: "black" }}
+                      to="/authors"
+                      onClick={toggleDrawer(false)}
+                    >
+                      Authors
+                    </Link>
+                  </MenuItem>
+                  <MenuItem>
+                    <Link
+                      style={{ textDecoration: "none", color: "black" }}
+                      to="/write"
+                      onClick={toggleDrawer(false)}
+                    >
+                      Write
+                    </Link>
+                  </MenuItem>
+                  <MenuItem>
+                    <Link
+                      style={{ textDecoration: "none", color: "black" }}
+                      to="/articles"
+                      onClick={toggleDrawer(false)}
+                    >
+                      Articles
+                    </Link>
+                  </MenuItem>
                   <Divider />
-                  <MenuItem>
-                    <Button
-                      color="primary"
-                      variant="contained"
-                      component="a"
-                      href="/signup"
-                      target="_blank"
-                      sx={{ width: "100%" }}
-                    >
-                      Sign up
-                    </Button>
-                  </MenuItem>
-                  <MenuItem>
-                    <Button
-                      color="primary"
-                      variant="outlined"
-                      component="a"
-                      href="/signin"
-                      target="_blank"
-                      sx={{ width: "100%" }}
-                    >
-                      Sign in
-                    </Button>
-                  </MenuItem>
+                  {user ? (
+                    <MenuItem>
+                      <Button
+                        color="primary"
+                        variant="text"
+                        size="small"
+                        component={Link}
+                        to="/profile"
+                        onClick={toggleDrawer(false)}
+                      >
+                        My Profile
+                      </Button>
+                    </MenuItem>
+                  ) : (
+                    <MenuItem>
+                      <Button
+                        color="primary"
+                        variant="contained"
+                        component={Link}
+                        to="/signup"
+                        sx={{ width: "100%" }}
+                        onClick={toggleDrawer(false)}
+                      >
+                        Sign up
+                      </Button>
+                    </MenuItem>
+                  )}
+
+                  {user ? (
+                    <MenuItem>
+                      <Button
+                        color="primary"
+                        variant="contained"
+                        size="small"
+                        component={Link}
+                        to="/logout"
+                        onClick={toggleDrawer(false)}
+                      >
+                        Log out
+                      </Button>
+                    </MenuItem>
+                  ) : (
+                    <MenuItem>
+                      <Button
+                        color="primary"
+                        variant="outlined"
+                        component={Link}
+                        to="/signin"
+                        sx={{ width: "100%" }}
+                        onClick={toggleDrawer(false)}
+                      >
+                        Sign in
+                      </Button>
+                    </MenuItem>
+                  )}
                 </Box>
               </Drawer>
             </Box>
