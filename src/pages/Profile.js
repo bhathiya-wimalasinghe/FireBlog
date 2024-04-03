@@ -26,7 +26,11 @@ export default function Profile() {
         }}
       >
         <Box>
-          <img alt="username" src={userImg} style={{ width: "300px" }} />
+          <img
+            alt="username"
+            src={userImg}
+            style={{ width: "300px", borderRadius: "10px" }}
+          />
           <Box display="flex" justifyContent="space-around" marginTop={2}>
             <Button variant="outlined" startIcon={<Upload />}>
               Upload

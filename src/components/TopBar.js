@@ -22,7 +22,7 @@ const logoStyle = {
 };
 
 export default function TopBar() {
-  const user = true;
+  const user = false;
   const [open, setOpen] = React.useState(false);
 
   const toggleDrawer = (newOpen) => () => {

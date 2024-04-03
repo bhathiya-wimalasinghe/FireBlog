@@ -11,7 +11,7 @@ export default function AuthorPage() {
         <img
           src={userImg}
           alt="userImg"
-          style={{ height: "500px", width: "500px" }}
+          style={{ height: "500px", width: "500px", borderRadius: "10px" }}
         />
         <Box
           display="flex"

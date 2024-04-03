@@ -1,28 +1,81 @@
-import * as React from "react";
+import React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
+import { Link } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import validator from "validator";
+
+// Todo: Implement remember me checkbox
 
 export default function SignUp() {
+  const [firstName, setFirstName] = React.useState("");
+  const [lastName, setLastName] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [error, setError] = React.useState("");
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
   const handleSubmit = (event) => {
     event.preventDefault();
+    setError("");
+
+    if (!firstName) {
+      setTimeout(() => {
+        setError("firstname");
+      }, 10);
+      return;
+    }
+
+    if (!lastName) {
+      setTimeout(() => {
+        setError("lastname");
+      }, 10);
+      return;
+    }
+
+    if (!emailRegex.test(email)) {
+      setTimeout(() => {
+        setError("email");
+      }, 10);
+      return;
+    }
+
+    if (
+      !validator.isStrongPassword(password, {
+        minLength: 8,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
+      })
+    ) {
+      setTimeout(() => {
+        setError("password");
+      }, 10);
+      return;
+    }
+
+    setError("");
+
+    const fullName = firstName + " " + lastName;
+
     const data = new FormData(event.currentTarget);
     console.log({
       email: data.get("email"),
       password: data.get("password"),
+      firstname: data.get("firstName"),
     });
   };
 
   return (
     <div>
-      <Box height="100px"></Box>
+      <Box height="50px"></Box>
 
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -49,6 +102,8 @@ export default function SignUp() {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
+                  error={error === "firstname"}
+                  helperText={error === "firstname" && "Enter your first name"}
                   autoComplete="given-name"
                   name="firstName"
                   required
@@ -56,30 +111,93 @@ export default function SignUp() {
                   id="firstName"
                   label="First Name"
                   autoFocus
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  sx={{
+                    "@keyframes shake": {
+                      "0%, 100%": { transform: "translateX(0)" },
+                      "10%, 30%, 50%, 70%, 90%": {
+                        transform: "translateX(-5px)",
+                      },
+                      "20%, 40%, 60%, 80%": { transform: "translateX(5px)" },
+                    },
+                    "& .Mui-error": {
+                      animation: "shake 0.2s",
+                    },
+                  }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
+                  error={error === "lastname"}
+                  helperText={error === "lastname" && "Enter your last name"}
                   required
                   fullWidth
                   id="lastName"
                   label="Last Name"
                   name="lastName"
                   autoComplete="family-name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  sx={{
+                    "@keyframes shake": {
+                      "0%, 100%": { transform: "translateX(0)" },
+                      "10%, 30%, 50%, 70%, 90%": {
+                        transform: "translateX(-5px)",
+                      },
+                      "20%, 40%, 60%, 80%": { transform: "translateX(5px)" },
+                    },
+                    "& .Mui-error": {
+                      animation: "shake 0.2s",
+                    },
+                  }}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  error={error === "email"}
+                  helperText={error === "email" && "Enter valid email address"}
                   required
                   fullWidth
                   id="email"
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  sx={{
+                    "@keyframes shake": {
+                      "0%, 100%": { transform: "translateX(0)" },
+                      "10%, 30%, 50%, 70%, 90%": {
+                        transform: "translateX(-5px)",
+                      },
+                      "20%, 40%, 60%, 80%": { transform: "translateX(5px)" },
+                    },
+                    "& .Mui-error": {
+                      animation: "shake 0.2s",
+                    },
+                  }}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  error={error === "password"}
+                  helperText={
+                    error === "password" &&
+                    "Password must be atleast 8 characters long. It must includes atleast 1 number,1 symbol and 1 uppercase letter"
+                  }
+                  sx={{
+                    "@keyframes shake": {
+                      "0%, 100%": { transform: "translateX(0)" },
+                      "10%, 30%, 50%, 70%, 90%": {
+                        transform: "translateX(-5px)",
+                      },
+                      "20%, 40%, 60%, 80%": { transform: "translateX(5px)" },
+                    },
+                    "& .Mui-error": {
+                      animation: "shake 0.2s",
+                    },
+                  }}
                   required
                   fullWidth
                   name="password"
@@ -87,6 +205,8 @@ export default function SignUp() {
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </Grid>
             </Grid>
@@ -100,9 +220,7 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
-                  Already have an account? Sign in
-                </Link>
+                <Link to="/signin">Already have an account? Sign in</Link>
               </Grid>
             </Grid>
           </Box>
