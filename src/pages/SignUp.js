@@ -15,8 +15,6 @@ import { auth } from "../firebase-config";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { Alert } from "@mui/material";
 
-// Todo: Implement remember me checkbox
-
 export default function SignUp() {
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
