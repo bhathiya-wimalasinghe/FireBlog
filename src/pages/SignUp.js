@@ -3,13 +3,17 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import validator from "validator";
+
+import { auth } from "../firebase-config";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { Alert } from "@mui/material";
 
 // Todo: Implement remember me checkbox
 
@@ -21,8 +25,9 @@ export default function SignUp() {
   const [error, setError] = React.useState("");
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
 
@@ -65,12 +70,24 @@ export default function SignUp() {
 
     const fullName = firstName + " " + lastName;
 
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-      firstname: data.get("firstName"),
-    });
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+
+      await updateProfile(user, { displayName: fullName });
+      navigate("/");
+    } catch (err) {
+      if (err.message.includes("email-already-in-use")) {
+        setError("This email is already exists in the system");
+      } else {
+        console.log("An error occurred while registering user:", error.message);
+        setError("Something went wrong! Try again later");
+      }
+    }
   };
 
   return (
@@ -226,6 +243,9 @@ export default function SignUp() {
           </Box>
         </Box>
       </Container>
+      {(error.includes("exists") || error.includes("wrong")) && (
+        <Alert severity="error">{error}</Alert>
+      )}
     </div>
   );
 }
