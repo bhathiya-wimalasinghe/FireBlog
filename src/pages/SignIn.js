@@ -13,7 +13,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
 import { Alert } from "@mui/material";
 
-export default function SignIn() {
+export default function SignIn({ setUser }) {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [error, setError] = React.useState("");
@@ -47,6 +47,8 @@ export default function SignIn() {
         email,
         password
       );
+
+      setUser(userCredential);
 
       navigate("/");
     } catch (err) {

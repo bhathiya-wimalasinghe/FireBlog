@@ -21,13 +21,8 @@ const logoStyle = {
   cursor: "pointer",
 };
 
-export default function TopBar() {
-  const user = false;
+export default function TopBar({ user, handleSignOut }) {
   const [open, setOpen] = React.useState(false);
-
-  const toggleDrawer = (newOpen) => () => {
-    setOpen(newOpen);
-  };
 
   return (
     <div>
@@ -140,7 +135,8 @@ export default function TopBar() {
                     variant="contained"
                     size="small"
                     component={Link}
-                    to="/logout"
+                    to="/"
+                    onClick={handleSignOut}
                   >
                     Log out
                   </Button>
@@ -173,7 +169,7 @@ export default function TopBar() {
                 variant="text"
                 color="primary"
                 aria-label="menu"
-                onClick={toggleDrawer(true)}
+                onClick={() => setOpen(true)}
                 sx={{ minWidth: "30px", p: "4px", marginLeft: "20px" }}
               >
                 {user && (
@@ -186,7 +182,7 @@ export default function TopBar() {
                 <MenuIcon />
               </Button>
 
-              <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
+              <Drawer anchor="right" open={open} onClose={() => setOpen(false)}>
                 <Box
                   sx={{
                     minWidth: "60dvw",
@@ -207,7 +203,7 @@ export default function TopBar() {
                     <Link
                       style={{ textDecoration: "none", color: "black" }}
                       to="/"
-                      onClick={toggleDrawer(false)}
+                      onClick={() => setOpen(false)}
                     >
                       Home
                     </Link>
@@ -216,7 +212,7 @@ export default function TopBar() {
                     <Link
                       style={{ textDecoration: "none", color: "black" }}
                       to="/about"
-                      onClick={toggleDrawer(false)}
+                      onClick={() => setOpen(false)}
                     >
                       About
                     </Link>
@@ -225,7 +221,7 @@ export default function TopBar() {
                     <Link
                       style={{ textDecoration: "none", color: "black" }}
                       to="/authors"
-                      onClick={toggleDrawer(false)}
+                      onClick={() => setOpen(false)}
                     >
                       Authors
                     </Link>
@@ -234,7 +230,7 @@ export default function TopBar() {
                     <Link
                       style={{ textDecoration: "none", color: "black" }}
                       to="/write"
-                      onClick={toggleDrawer(false)}
+                      onClick={() => setOpen(false)}
                     >
                       Write
                     </Link>
@@ -243,7 +239,7 @@ export default function TopBar() {
                     <Link
                       style={{ textDecoration: "none", color: "black" }}
                       to="/articles"
-                      onClick={toggleDrawer(false)}
+                      onClick={() => setOpen(false)}
                     >
                       Articles
                     </Link>
@@ -257,7 +253,7 @@ export default function TopBar() {
                         size="small"
                         component={Link}
                         to="/profile"
-                        onClick={toggleDrawer(false)}
+                        onClick={() => setOpen(false)}
                       >
                         My Profile
                       </Button>
@@ -270,7 +266,7 @@ export default function TopBar() {
                         component={Link}
                         to="/signup"
                         sx={{ width: "100%" }}
-                        onClick={toggleDrawer(false)}
+                        onClick={() => setOpen(false)}
                       >
                         Sign up
                       </Button>
@@ -284,8 +280,11 @@ export default function TopBar() {
                         variant="contained"
                         size="small"
                         component={Link}
-                        to="/logout"
-                        onClick={toggleDrawer(false)}
+                        to="/"
+                        onClick={() => {
+                          setOpen(false);
+                          handleSignOut();
+                        }}
                       >
                         Log out
                       </Button>
@@ -298,7 +297,7 @@ export default function TopBar() {
                         component={Link}
                         to="/signin"
                         sx={{ width: "100%" }}
-                        onClick={toggleDrawer(false)}
+                        onClick={() => setOpen(false)}
                       >
                         Sign in
                       </Button>

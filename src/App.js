@@ -14,12 +14,29 @@ import About from "./pages/About";
 import Profile from "./pages/Profile";
 import AuthorPage from "./pages/AuthorPage";
 
+import { signOut, onAuthStateChanged } from "firebase/auth";
+import { auth } from "./firebase-config";
+
 function App() {
+  const [user, setUser] = React.useState(null);
+
+  React.useEffect(() => {
+    const unsbscribe = onAuthStateChanged(auth, (user) =>
+      user ? setUser(user) : setUser(null)
+    );
+
+    return () => unsbscribe();
+  }, []);
+
+  const handleSignOut = () => {
+    signOut(auth);
+  };
+
   return (
     <div>
       <Router>
         <ScrollToTop />
-        <TopBar />
+        <TopBar handleSignOut={handleSignOut} user={user} />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
@@ -28,7 +45,7 @@ function App() {
           <Route path="/write" element={<Write />} />
           <Route path="/articles" element={<Posts />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signin" element={<SignIn setUser={setUser} />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/singlepost" element={<SinglePost />} />
         </Routes>

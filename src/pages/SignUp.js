@@ -77,7 +77,7 @@ export default function SignUp() {
       const user = userCredential.user;
 
       await updateProfile(user, { displayName: fullName });
-      navigate("/");
+      navigate("/signin");
     } catch (err) {
       if (err.message.includes("email-already-in-use")) {
         setError("This email is already exists in the system");
