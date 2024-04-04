@@ -1,13 +1,23 @@
 import { CloudUpload } from "@mui/icons-material";
-import { Button, Container, Box, Typography } from "@mui/material";
-import React, { useState } from "react";
+import {
+  Button,
+  Container,
+  Box,
+  Typography,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+} from "@mui/material";
+import React from "react";
 import ReactQuill from "react-quill";
 import TextField from "@mui/material/TextField";
 import { styled } from "@mui/material/styles";
 import "react-quill/dist/quill.snow.css";
 
 export default function Write() {
-  const [value, setValue] = useState("");
+  const [value, setValue] = React.useState("");
+  const [category, setCategory] = React.useState("");
 
   const modules = {
     toolbar: [
@@ -23,19 +33,6 @@ export default function Write() {
       ["clean"],
     ],
   };
-
-  const formats = [
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "blockquote",
-    "list",
-    "bullet",
-    "indent",
-    "link",
-  ];
 
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
@@ -85,16 +82,36 @@ export default function Write() {
         display="flex"
         noValidate
         autoComplete="off"
+        flexDirection={{ md: "row", xs: "column" }}
       >
         <TextField
-          sx={{ width: "100%", marginRight: 1 }}
+          sx={{ marginRight: 1 }}
           id="outlined-basic"
           label="Title"
           variant="outlined"
+          fullWidth
         />
-        <Button variant="contained" size="large">
-          Publish
-        </Button>
+        <Box display="flex" flexDirection="row" marginTop={{ xs: 1, md: 0 }}>
+          <FormControl sx={{ minWidth: "120px", marginRight: 1 }}>
+            <InputLabel id="lbl-category">Category</InputLabel>
+            <Select
+              labelId="lbl-category"
+              id="cetegory-select"
+              value={category}
+              label="Category"
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              <MenuItem value={"Entertainment"}>Entertainment</MenuItem>
+              <MenuItem value={"Finance"}>Finance</MenuItem>
+              <MenuItem value={"Health"}>Health</MenuItem>
+              <MenuItem value={"Sport"}>Sport</MenuItem>
+              <MenuItem value={"Technology"}>Technology</MenuItem>
+            </Select>
+          </FormControl>
+          <Button variant="contained" size="large">
+            Publish
+          </Button>
+        </Box>
       </Box>
       <ReactQuill
         placeholder="Tell your story here.."

@@ -42,9 +42,9 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/authors" element={<Authors />} />
           <Route path="/authorName" element={<AuthorPage />} />
-          <Route path="/write" element={<Write />} />
+          <Route path="/write" element={user ? <Write /> : <SignIn />} />
           <Route path="/articles" element={<Posts />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile" element={user ? <Profile /> : <SignIn />} />
           <Route path="/signin" element={<SignIn setUser={setUser} />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/singlepost" element={<SinglePost />} />
