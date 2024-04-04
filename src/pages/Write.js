@@ -20,12 +20,16 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { addDoc, collection } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 
+import { CircularProgress } from "@mui/material";
+
 export default function Write() {
   const [content, setContent] = React.useState("");
   const [category, setCategory] = React.useState("");
   const [image, setImage] = React.useState(null);
   const [title, setTitle] = React.useState("");
   const [file, setFile] = React.useState(null);
+
+  const [loading, setLoading] = React.useState(false);
 
   const handleImage = (e) => {
     const file = e.target.files[0];
@@ -38,32 +42,39 @@ export default function Write() {
 
   const handleUpload = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
-    //handle image upload
-    const storageRef = ref(storage, `images/${file.name}`);
-    await uploadBytes(storageRef, file);
-    const imageUrl = await getDownloadURL(storageRef);
+    try {
+      //handle image upload
+      const storageRef = ref(storage, `images/${file.name}`);
+      await uploadBytes(storageRef, file);
+      const imageUrl = await getDownloadURL(storageRef);
 
-    // handle post upload
-    const postCollectionRef = collection(db, "posts");
+      // handle post upload
+      const postCollectionRef = collection(db, "posts");
 
-    await addDoc(postCollectionRef, {
-      title,
-      category,
-      content,
-      imageUrl,
-      authorName: auth.currentUser.displayName,
-      userId: auth.currentUser.uid,
-      uploadedDateTime: new Date().toISOString(),
-    });
+      await addDoc(postCollectionRef, {
+        title,
+        category,
+        content,
+        imageUrl,
+        authorName: auth.currentUser.displayName,
+        userId: auth.currentUser.uid,
+        uploadedDateTime: new Date().toISOString(),
+      });
 
-    setTitle("");
-    setCategory("");
-    setContent("");
-    setImage(null);
-    setFile(null);
+      setTitle("");
+      setCategory("");
+      setContent("");
+      setImage(null);
+      setFile(null);
 
-    navigate("/");
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const modules = {
@@ -181,8 +192,11 @@ export default function Write() {
             size="large"
             disabled={!image || !title || !content || !category}
             onClick={(e) => handleUpload(e)}
+            startIcon={
+              loading ? <CircularProgress size={24} color="inherit" /> : null
+            }
           >
-            Publish
+            {loading ? "Publishing..." : "Publish"}{" "}
           </Button>
         </Box>
       </Box>
