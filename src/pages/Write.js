@@ -1,4 +1,4 @@
-import { CloudUpload } from "@mui/icons-material";
+import { Close, CloudUpload, Delete } from "@mui/icons-material";
 import {
   Button,
   Container,
@@ -15,9 +15,56 @@ import TextField from "@mui/material/TextField";
 import { styled } from "@mui/material/styles";
 import "react-quill/dist/quill.snow.css";
 
+import { storage, db, auth } from "../firebase-config";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { addDoc, collection } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
+
 export default function Write() {
-  const [value, setValue] = React.useState("");
+  const [content, setContent] = React.useState("");
   const [category, setCategory] = React.useState("");
+  const [image, setImage] = React.useState(null);
+  const [title, setTitle] = React.useState("");
+  const [file, setFile] = React.useState(null);
+
+  const handleImage = (e) => {
+    const file = e.target.files[0];
+    const imgUrl = URL.createObjectURL(file);
+    setImage(imgUrl);
+    setFile(file);
+  };
+
+  const navigate = useNavigate();
+
+  const handleUpload = async (e) => {
+    e.preventDefault();
+
+    //handle image upload
+    const storageRef = ref(storage, `images/${file.name}`);
+    await uploadBytes(storageRef, file);
+    const imageUrl = await getDownloadURL(storageRef);
+
+    // handle post upload
+    const postCollectionRef = collection(db, "posts");
+
+    await addDoc(postCollectionRef, {
+      title,
+      category,
+      content,
+      imageUrl,
+      authorName: auth.currentUser.displayName,
+      userId: auth.currentUser.uid,
+      uploadedDateTime: new Date().toISOString(),
+    });
+
+    setTitle("");
+    setCategory("");
+    setContent("");
+    setImage(null);
+    setFile(null);
+
+    navigate("/");
+  };
 
   const modules = {
     toolbar: [
@@ -59,20 +106,39 @@ export default function Write() {
         height="350px"
         marginBottom={2}
       >
+        {image && (
+          <Button
+            sx={{
+              position: "absolute",
+              zIndex: "999",
+              right: 25,
+              ":hover": { cursor: "pointer" },
+              color: "black",
+            }}
+            onClick={() => setImage(null)}
+          >
+            <Delete />
+          </Button>
+        )}
+
         <Button
           component="label"
-          role={undefined}
           variant="contained"
           tabIndex={-1}
-          startIcon={<CloudUpload />}
+          startIcon={!image && <CloudUpload />}
           sx={{
             width: "100%",
             backgroundColor: "lightgray",
             ":hover": { backgroundColor: "lightcyan" },
             color: "black",
+            backgroundImage: `url(${image})`,
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
+            backgroundSize: "cover",
           }}
+          onChange={handleImage}
         >
-          Upload Your Image Here
+          {!image && "Upload Your Image Here"}
           <VisuallyHiddenInput type="file" />
         </Button>
       </Box>
@@ -90,6 +156,8 @@ export default function Write() {
           label="Title"
           variant="outlined"
           fullWidth
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
         />
         <Box display="flex" flexDirection="row" marginTop={{ xs: 1, md: 0 }}>
           <FormControl sx={{ minWidth: "120px", marginRight: 1 }}>
@@ -108,7 +176,12 @@ export default function Write() {
               <MenuItem value={"Technology"}>Technology</MenuItem>
             </Select>
           </FormControl>
-          <Button variant="contained" size="large">
+          <Button
+            variant="contained"
+            size="large"
+            disabled={!image || !title || !content || !category}
+            onClick={(e) => handleUpload(e)}
+          >
             Publish
           </Button>
         </Box>
@@ -118,8 +191,8 @@ export default function Write() {
         modules={modules}
         // formats={formats}
         theme="snow"
-        value={value}
-        onChange={setValue}
+        value={content}
+        onChange={setContent}
       />
     </Container>
   );
