@@ -30,7 +30,7 @@ export default function Posts() {
   const [searchKeyword, setSearchKeyword] = React.useState("");
   const [currentPage, setCurrentPage] = React.useState(1);
 
-  const postsPerPage = 3;
+  const postsPerPage = 6;
   const totalPages = Math.ceil(
     (filteredPostsList || postsList || []).length / postsPerPage
   );
@@ -130,6 +130,13 @@ export default function Posts() {
 
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
+    window.scrollTo(0, 0);
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
   };
 
   return (
@@ -154,6 +161,7 @@ export default function Posts() {
           variant="outlined"
           fullWidth
           onChange={(e) => setSearchKeyword(e.target.value)}
+          onKeyDown={handleKeyPress}
         />
         <Button
           variant="contained"
