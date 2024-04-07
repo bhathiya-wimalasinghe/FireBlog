@@ -25,6 +25,7 @@ export default function Posts() {
 
   const [selectedCategory, setSelectedCategory] = React.useState(null);
   const [filteredPostsList, setfilteredPostsList] = React.useState(null);
+  const [searchKeyword, setSearchKeyword] = React.useState("");
 
   const postCollectionRef = collection(db, "posts");
 
@@ -96,6 +97,23 @@ export default function Posts() {
     });
   };
 
+  const handleSearch = () => {
+    selectedCategory && toggleCategoryButtons(selectedCategory);
+    setSelectedCategory(null);
+    if (searchKeyword === "") {
+      setfilteredPostsList(null);
+      return;
+    }
+
+    const tempPostsList = postsList.filter(
+      (post) =>
+        post.title.toLowerCase().indexOf(searchKeyword.toLowerCase()) !== -1 ||
+        post.content.toLowerCase().indexOf(searchKeyword.toLowerCase()) !== -1
+    );
+
+    setfilteredPostsList(tempPostsList);
+  };
+
   return (
     <Container
       sx={{
@@ -117,8 +135,13 @@ export default function Posts() {
           label="Search articles "
           variant="outlined"
           fullWidth
+          onChange={(e) => setSearchKeyword(e.target.value)}
         />
-        <Button variant="contained" sx={{ marginLeft: "10px", width: "150px" }}>
+        <Button
+          variant="contained"
+          sx={{ marginLeft: "10px", width: "150px" }}
+          onClick={handleSearch}
+        >
           Find
         </Button>
       </Box>
