@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import Box from "@mui/material/Box";
 import AppBar from "@mui/material/AppBar";
@@ -14,6 +14,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import img from "../images/FireBlog.svg";
 import userImage from "../images/Bhathiya_Wimalasinghe.jpg";
 import { Avatar } from "@mui/material";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase-config";
 
 const logoStyle = {
   width: "140px",
@@ -21,8 +23,14 @@ const logoStyle = {
   cursor: "pointer",
 };
 
-export default function TopBar({ user, handleSignOut }) {
+export default function TopBar({ user }) {
   const [open, setOpen] = React.useState(false);
+  const navigate = useNavigate();
+
+  const handleSignOut = () => {
+    signOut(auth);
+    navigate("/");
+  };
 
   return (
     <div>

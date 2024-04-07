@@ -6,14 +6,21 @@ import { Button, Container, Divider, Grid, Typography } from "@mui/material";
 import postImg from "../images/post.jpg";
 import userImg from "../images/Bhathiya_Wimalasinghe.jpg";
 import Post from "../components/Post";
-
-// #03045e
-// #0077b6
-// #00b4d8
-// #90e0ef
-// #caf0f8
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { auth, db } from "../firebase-config";
 
 export default function Home() {
+  const [techPostList, setTechPostList] = React.useState(null);
+
+  const postCollectionRef = collection(db, "posts");
+
+  const getPosts = async () => {
+    console.log("Get Posts");
+    const q = query(postCollectionRef, where("category", "==", "Technology"));
+
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => console.log(doc));
+  };
   return (
     <div>
       {/**  Todo: Need to fix  homepage background images for mobile sites **/}
@@ -44,7 +51,9 @@ export default function Home() {
           <Typography component="h2" variant="h4">
             Technology
           </Typography>
-          <Button variant="outlined">View All</Button>
+          <Button variant="outlined" onClick={getPosts}>
+            View All
+          </Button>
         </Box>
         <Divider />
         <Grid container spacing={5} marginTop={2} marginBottom={5}>

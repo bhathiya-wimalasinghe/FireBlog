@@ -28,15 +28,11 @@ function App() {
     return () => unsbscribe();
   }, []);
 
-  const handleSignOut = () => {
-    signOut(auth);
-  };
-
   return (
     <div>
       <Router>
         <ScrollToTop />
-        <TopBar handleSignOut={handleSignOut} user={user} />
+        <TopBar user={user} />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />

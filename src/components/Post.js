@@ -3,19 +3,13 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import {
-  Avatar,
-  Box,
-  ButtonBase,
-  CardActionArea,
-  Chip,
-  Paper,
-} from "@mui/material";
+import { Avatar, Box, ButtonBase, CardActionArea, Chip } from "@mui/material";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
 export default function Post(props) {
-  const { img, title, content, userImg, uploadedDate, userName } = props;
+  const { img, title, content, userImg, uploadedDate, userName, category } =
+    props;
 
   return (
     <Box>
@@ -47,7 +41,19 @@ export default function Post(props) {
               }}
             />
             <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
+              <Typography
+                gutterBottom
+                variant="h6"
+                component="div"
+                sx={{
+                  height: "60px",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  display: "-webkit-box",
+                  WebkitLineClamp: "2",
+                  WebkitBoxOrient: "vertical",
+                }}
+              >
                 {title}
               </Typography>
             </CardContent>
@@ -73,7 +79,7 @@ export default function Post(props) {
                   </Typography>
                 </Box>
               </Box>
-              <Chip label="Category" />
+              <Chip label={category} />
             </Box>
           </CardActionArea>
         </ButtonBase>
@@ -89,4 +95,5 @@ Post.propTypes = {
   userImg: PropTypes.string,
   uploadedDate: PropTypes.string,
   userName: PropTypes.string,
+  category: PropTypes.string,
 };

@@ -8,6 +8,7 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
+  Alert,
 } from "@mui/material";
 import React from "react";
 import ReactQuill from "react-quill";
@@ -28,6 +29,7 @@ export default function Write() {
   const [image, setImage] = React.useState(null);
   const [title, setTitle] = React.useState("");
   const [file, setFile] = React.useState(null);
+  const [error, setError] = React.useState("");
 
   const [loading, setLoading] = React.useState(false);
 
@@ -71,7 +73,8 @@ export default function Write() {
 
       navigate("/");
     } catch (err) {
-      console.log(err);
+      setError("Something went wrong. Try again later");
+      console.log(error);
     } finally {
       setLoading(false);
     }
@@ -203,11 +206,11 @@ export default function Write() {
       <ReactQuill
         placeholder="Tell your story here.."
         modules={modules}
-        // formats={formats}
         theme="snow"
         value={content}
         onChange={setContent}
       />
+      {error && <Alert severity="error">{error}</Alert>}
     </Container>
   );
 }
