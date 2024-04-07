@@ -23,11 +23,25 @@ export default function Posts() {
     Sport: "outlined",
   });
 
+  const [selectedCategory, setSelectedCategory] = React.useState(null);
+  const [filteredPostsList, setfilteredPostsList] = React.useState(null);
+
   const postCollectionRef = collection(db, "posts");
 
   React.useEffect(() => {
     getPosts();
   }, []);
+
+  React.useEffect(() => {
+    if (!postsList || !selectedCategory) {
+      setfilteredPostsList(null);
+      return;
+    }
+
+    setfilteredPostsList(
+      postsList.filter((post) => post.category === selectedCategory)
+    );
+  }, [selectedCategory]);
 
   const getPosts = async () => {
     try {
@@ -66,12 +80,17 @@ export default function Posts() {
     setBtnVariant((prevBtnVariant) => {
       const updatedBtnVariant = {};
       Object.keys(prevBtnVariant).forEach((category) => {
-        updatedBtnVariant[category] =
-          category === clickedCategory
-            ? prevBtnVariant[category] === "contained"
-              ? "outlined"
-              : "contained"
-            : "outlined";
+        if (category === clickedCategory) {
+          if (prevBtnVariant[category] === "contained") {
+            updatedBtnVariant[category] = "outlined";
+            setSelectedCategory(null);
+          } else {
+            updatedBtnVariant[category] = "contained";
+            setSelectedCategory(category);
+          }
+        } else {
+          updatedBtnVariant[category] = "outlined";
+        }
       });
       return updatedBtnVariant;
     });
@@ -152,7 +171,7 @@ export default function Posts() {
       </Box>
       <Grid marginTop={3} container spacing={5}>
         {postsList ? (
-          postsList.map((post) => (
+          (filteredPostsList || postsList).map((post) => (
             <Grid
               item
               key={post.id}
