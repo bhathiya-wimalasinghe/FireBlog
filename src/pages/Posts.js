@@ -10,10 +10,12 @@ import {
 import React from "react";
 import Post from "../components/Post";
 import userImg from "../images/Bhathiya_Wimalasinghe.jpg";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase-config";
 
 export default function Posts() {
+  const postCollectionRef = collection(db, "posts");
+
   const [postsList, setPostsList] = React.useState(null);
   const [btnVariant, setBtnVariant] = React.useState({
     Entertainment: "outlined",
@@ -26,8 +28,12 @@ export default function Posts() {
   const [selectedCategory, setSelectedCategory] = React.useState(null);
   const [filteredPostsList, setfilteredPostsList] = React.useState(null);
   const [searchKeyword, setSearchKeyword] = React.useState("");
+  const [currentPage, setCurrentPage] = React.useState(1);
 
-  const postCollectionRef = collection(db, "posts");
+  const postsPerPage = 3;
+  const totalPages = Math.ceil(
+    (filteredPostsList || postsList || []).length / postsPerPage
+  );
 
   React.useEffect(() => {
     getPosts();
@@ -100,6 +106,7 @@ export default function Posts() {
   const handleSearch = () => {
     selectedCategory && toggleCategoryButtons(selectedCategory);
     setSelectedCategory(null);
+    setCurrentPage(1);
     if (searchKeyword === "") {
       setfilteredPostsList(null);
       return;
@@ -112,6 +119,17 @@ export default function Posts() {
     );
 
     setfilteredPostsList(tempPostsList);
+  };
+
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = (filteredPostsList || postsList || []).slice(
+    indexOfFirstPost,
+    indexOfLastPost
+  );
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
   };
 
   return (
@@ -193,8 +211,8 @@ export default function Posts() {
         </Button>
       </Box>
       <Grid marginTop={3} container spacing={5}>
-        {postsList ? (
-          (filteredPostsList || postsList).map((post) => (
+        {currentPosts.length > 0 ? (
+          currentPosts.map((post) => (
             <Grid
               item
               key={post.id}
@@ -217,12 +235,18 @@ export default function Posts() {
           ))
         ) : (
           <Typography textAlign="center" width="100%">
-            There is no post that matches search query
+            No Posts Found!
           </Typography>
         )}
       </Grid>
       <Box display="flex" justifyContent="center" margin={4}>
-        <Pagination count={10} shape="rounded" size="large" />
+        <Pagination
+          count={totalPages}
+          page={currentPage}
+          onChange={handlePageChange}
+          shape="rounded"
+          size="large"
+        />
       </Box>
     </Container>
   );
