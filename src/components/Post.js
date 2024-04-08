@@ -8,7 +8,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
 export default function Post(props) {
-  const { img, title, content, userImg, uploadedDate, userName, category } =
+  const { img, title, content, userImg, uploadedDate, userName, category, id } =
     props;
 
   return (
@@ -26,7 +26,7 @@ export default function Post(props) {
           padding: "10px",
         }}
       >
-        <ButtonBase component={Link} to="/singlepost">
+        <ButtonBase component={Link} to={`/article/${id}`}>
           <CardActionArea>
             <CardMedia
               component="img"

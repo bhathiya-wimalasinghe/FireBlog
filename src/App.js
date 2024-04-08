@@ -43,7 +43,7 @@ function App() {
           <Route path="/profile" element={user ? <Profile /> : <SignIn />} />
           <Route path="/signin" element={<SignIn setUser={setUser} />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/singlepost" element={<SinglePost />} />
+          <Route path="/article/:postId" element={<SinglePost />} />
         </Routes>
         <Footer />
       </Router>

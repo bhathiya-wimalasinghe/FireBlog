@@ -238,6 +238,7 @@ export default function Posts() {
                 uploadedDate={post.uploadedDateTime}
                 userName={post.authorName}
                 category={post.category}
+                id={post.id}
               />
             </Grid>
           ))
