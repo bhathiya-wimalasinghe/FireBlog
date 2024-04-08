@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase-config";
 import { Height } from "@mui/icons-material";
+import ReactQuill from "react-quill";
 
 export default function SinglePost() {
   const { postId } = useParams();
@@ -69,9 +70,11 @@ export default function SinglePost() {
             />
           </Box>
           <Divider />
-          <Typography textAlign="center" margin={1} component="p">
-            {post.content}
-          </Typography>
+          {/* <Typography textAlign="center" margin={1} component="p">
+            <ReactQuill value={post.content} readOnly={true} theme="bubble" />
+          </Typography> */}
+          <ReactQuill value={post.content} readOnly={true} theme="bubble" />
+
           <Divider />
           <Box>
             <Typography

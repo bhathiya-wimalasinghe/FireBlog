@@ -25,6 +25,8 @@ export default function SignUp() {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const navigate = useNavigate();
 
+  // Todo: improve firstName lastName validation - cannot contain spaces in firstName and lastName
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");

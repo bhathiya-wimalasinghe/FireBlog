@@ -1,4 +1,4 @@
-import { Close, CloudUpload, Delete } from "@mui/icons-material";
+import { CloudUpload, Delete } from "@mui/icons-material";
 import {
   Button,
   Container,

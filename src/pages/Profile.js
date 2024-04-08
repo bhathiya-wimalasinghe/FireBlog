@@ -8,10 +8,97 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import userImg from "../images/Bhathiya_Wimalasinghe.jpg";
-import { Delete, Upload } from "@mui/icons-material";
+import userImg from "../images/user.jpg";
+import { AccountCircle, Delete, Upload } from "@mui/icons-material";
+import { getAuth, updateProfile } from "firebase/auth";
+import { styled } from "@mui/material/styles";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { storage, db } from "../firebase-config";
+import { addDoc, collection } from "firebase/firestore";
+
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
 
 export default function Profile() {
+  const auth = getAuth();
+  const user = auth.currentUser;
+
+  const email = user.email;
+
+  const [firstName, setFirstName] = React.useState(
+    user && user.displayName ? user.displayName.split(" ")[0] : ""
+  );
+
+  const [lastName, setLastName] = React.useState(
+    user && user.displayName ? user.displayName.split(" ")[1] : ""
+  );
+
+  const [phoneNumber, setPhoneNumber] = React.useState(
+    user && user.phoneNumber ? user.phoneNumber : ""
+  );
+  const [photoURL, setPhotoURL] = React.useState(
+    user && user.photoURL ? user.photoURL : null
+  );
+
+  const [description, setDescription] = React.useState("");
+
+  const [file, setFile] = React.useState(null);
+
+  const handleImage = (e) => {
+    const selectedFile = e.target.files[0];
+    const imgUrl = URL.createObjectURL(selectedFile);
+    setPhotoURL(imgUrl);
+    setFile(selectedFile);
+  };
+
+  const handleUpdate = async (e) => {
+    // validate phone number
+    const phoneRegex = /^\+[1-9]\d{10}$/;
+    if (phoneNumber && !phoneRegex.test(phoneNumber)) return;
+
+    try {
+      // handle profile pic upload
+      if (!user.photoURL && photoURL) {
+        console.log(file + "something");
+        const storageRef = ref(storage, `users/${file.name}`);
+        await uploadBytes(storageRef, file);
+        const imgUrl = await getDownloadURL(storageRef);
+        setPhotoURL(imgUrl);
+      }
+
+      // handle description upload
+      if (description) {
+        const postCollectionRef = collection(db, "userDescription");
+
+        await addDoc(postCollectionRef, {
+          description,
+          userId: user.uid,
+        });
+      }
+
+      // handle user details update
+      const fullName = firstName + " " + lastName;
+
+      await updateProfile(user, {
+        displayName: fullName,
+        phoneNumber,
+        photoURL,
+      });
+      console.log("done");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Box>
       <Container sx={{ marginTop: "100px", marginBottom: "40px" }}>
@@ -28,14 +115,27 @@ export default function Profile() {
         <Box>
           <img
             alt="username"
-            src={userImg}
-            style={{ width: "300px", borderRadius: "10px" }}
+            src={photoURL || userImg}
+            style={{ width: "300px", borderRadius: "10px", maxHeight: "500px" }}
           />
+
           <Box display="flex" justifyContent="space-around" marginTop={2}>
-            <Button variant="outlined" startIcon={<Upload />}>
+            <Button
+              component="label"
+              tabIndex={-1}
+              variant="outlined"
+              startIcon={<Upload />}
+              onChange={handleImage}
+              sx={{ ":hover": { backgroundColor: "lightcyan" } }}
+            >
               Upload
+              <VisuallyHiddenInput type="file" />
             </Button>
-            <Button variant="outlined" startIcon={<Delete />}>
+            <Button
+              sx={{ ":hover": { backgroundColor: "lightcyan" } }}
+              variant="outlined"
+              startIcon={<Delete />}
+            >
               Remove
             </Button>
           </Box>
@@ -44,15 +144,22 @@ export default function Profile() {
         <Stack spacing={3}>
           <Box>
             <TextField
+              required
               id="outlined-basic"
               label="First Name"
               variant="outlined"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              sx={{ marginRight: "10px" }}
             />
 
             <TextField
+              required
               id="outlined-basic"
               label="Last Name"
               variant="outlined"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
             />
           </Box>
           <TextField
@@ -60,12 +167,31 @@ export default function Profile() {
             id="outlined-basic"
             label="Your Email"
             variant="outlined"
+            value={email}
           />
           <TextField
             id="outlined-basic"
             label="Contact No:"
             variant="outlined"
+            placeholder="Ex - +9470XXXXXXX"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
           />
+
+          <TextField
+            id="outlined-basic"
+            label="Description About You.."
+            variant="outlined"
+            multiline
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+          <Button variant="contained" onClick={handleUpdate}>
+            Update
+          </Button>
+
+          <Button variant="contained">Change Password</Button>
+
           <TextField
             id="outlined-basic"
             label="Enter New Password"
@@ -76,14 +202,6 @@ export default function Profile() {
             label="Confirm Password"
             variant="outlined"
           />
-          <Button variant="contained">Change Password</Button>
-          <TextField
-            id="outlined-basic"
-            label="Description About You.."
-            variant="outlined"
-            multiline
-          />
-          <Button variant="contained">Update</Button>
         </Stack>
       </Container>
     </Box>
