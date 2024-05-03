@@ -2,19 +2,20 @@ import {
   Box,
   Button,
   Container,
-  Divider,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
 import React from "react";
 import userImg from "../images/user.jpg";
-import { AccountCircle, Delete, Upload } from "@mui/icons-material";
+import { Delete, Upload } from "@mui/icons-material";
 import { getAuth, updateProfile } from "firebase/auth";
 import { styled } from "@mui/material/styles";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage, db } from "../firebase-config";
 import { addDoc, collection } from "firebase/firestore";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -28,10 +29,7 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-export default function Profile() {
-  const auth = getAuth();
-  const user = auth.currentUser;
-
+export default function Profile({ user }) {
   const email = user.email;
 
   const [firstName, setFirstName] = React.useState(
@@ -52,6 +50,8 @@ export default function Profile() {
   const [description, setDescription] = React.useState("");
 
   const [file, setFile] = React.useState(null);
+  const [open, setOpen] = React.useState(false);
+  const [alertMessage, setAlertMessage] = React.useState("");
 
   const handleImage = (e) => {
     const selectedFile = e.target.files[0];
@@ -93,10 +93,21 @@ export default function Profile() {
         phoneNumber,
         photoURL,
       });
-      console.log("done");
+      setAlertMessage("Your profile is successfully updated");
+      setOpen(true);
     } catch (error) {
+      setAlertMessage("Something went wrong! Please try again later");
+      setOpen(true);
       console.log(error);
     }
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
   };
 
   return (
@@ -203,6 +214,18 @@ export default function Profile() {
             variant="outlined"
           />
         </Stack>
+        <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
+          <Alert
+            onClose={handleClose}
+            severity={
+              alertMessage.includes("successfully") ? "success" : "error"
+            }
+            sx={{ width: "100%" }}
+            variant="filled"
+          >
+            {alertMessage}
+          </Alert>
+        </Snackbar>
       </Container>
     </Box>
   );

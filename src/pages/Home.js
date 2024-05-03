@@ -3,24 +3,85 @@ import Box from "@mui/material/Box";
 import backgroundImg from "../images/header_image.jpg";
 import logo from "../images/fireblog-logo.svg";
 import { Button, Container, Divider, Grid, Typography } from "@mui/material";
-import postImg from "../images/post.jpg";
 import userImg from "../images/Bhathiya_Wimalasinghe.jpg";
 import Post from "../components/Post";
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { auth, db } from "../firebase-config";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase-config";
+
+// Todo: Need to get UserImg from firebase
 
 export default function Home() {
-  const [techPostList, setTechPostList] = React.useState(null);
-
   const postCollectionRef = collection(db, "posts");
 
-  const getPosts = async () => {
-    console.log("Get Posts");
-    const q = query(postCollectionRef, where("category", "==", "Technology"));
+  const [postsList, setPostsList] = React.useState(null);
 
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => console.log(doc));
+  React.useEffect(() => {
+    getPosts();
+  }, []);
+
+  const getPosts = async () => {
+    console.log("getposts");
+    try {
+      const querySnapshot = await getDocs(postCollectionRef);
+
+      const postsData = [];
+
+      querySnapshot.forEach((doc) => {
+        const postData = doc.data();
+
+        const uploadedDate = new Date(postData.uploadedDateTime);
+        const formattedDate = uploadedDate.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+
+        const postInfo = {
+          id: doc.id,
+          imageUrl: postData.imageUrl,
+          title: postData.title,
+          content: postData.content,
+          uploadedDateTime: formattedDate,
+          authorName: postData.authorName,
+          category: postData.category,
+        };
+
+        postsData.push(postInfo);
+      });
+      setPostsList(postsData);
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  const renderPostsCategory = (category) => {
+    const filteredPosts = postsList.filter(
+      (post) => post.category === category
+    );
+
+    return (
+      <>
+        {filteredPosts.map(
+          (post, index) =>
+            (index < 3 || filteredPosts.length <= 3) && (
+              <Grid key={post.id} item xs={12} sm={6} md={4}>
+                <Post
+                  img={post.imageUrl}
+                  title={post.title}
+                  content={post.content}
+                  userImg={userImg}
+                  uploadedDate={post.uploadedDateTime}
+                  userName={post.authorName}
+                  category={post.category}
+                  id={post.id}
+                />
+              </Grid>
+            )
+        )}
+      </>
+    );
+  };
+
   return (
     <div>
       {/**  Todo: Need to fix  homepage background images for mobile sites **/}
@@ -57,36 +118,7 @@ export default function Home() {
         </Box>
         <Divider />
         <Grid container spacing={5} marginTop={2} marginBottom={5}>
-          <Grid item xs={12} sm={6} md={4}>
-            <Post
-              img={postImg}
-              title="This is sample Title"
-              content="This is sample content. This is sample content. This is sample content."
-              userImg={userImg}
-              uploadedDate="1 hour ago"
-              userName="Bhathiya Wimalasinghe"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <Post
-              img={postImg}
-              title="This is sample Title"
-              content="This is sample content. This is sample content. This is sample content."
-              userImg={userImg}
-              uploadedDate="1 hour ago"
-              userName="Bhathiya Wimalasinghe"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <Post
-              img={postImg}
-              title="This is sample Title"
-              content="This is sample content. This is sample content. This is sample content."
-              userImg={userImg}
-              uploadedDate="1 hour ago"
-              userName="Bhathiya Wimalasinghe"
-            />
-          </Grid>
+          {renderPostsCategory("Technology")}
         </Grid>
 
         <Box display="flex" justifyContent="space-between" mb={3}>
@@ -97,36 +129,7 @@ export default function Home() {
         </Box>
         <Divider />
         <Grid container spacing={3} marginTop={2} marginBottom={5}>
-          <Grid item xs={12} sm={6} md={4}>
-            <Post
-              img={postImg}
-              title="This is sample Title"
-              content="This is sample content. This is sample content. This is sample content."
-              userImg={userImg}
-              uploadedDate="1 hour ago"
-              userName="Bhathiya Wimalasinghe"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <Post
-              img={postImg}
-              title="This is sample Title"
-              content="This is sample content. This is sample content. This is sample content."
-              userImg={userImg}
-              uploadedDate="1 hour ago"
-              userName="Bhathiya Wimalasinghe"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <Post
-              img={postImg}
-              title="This is sample Title"
-              content="This is sample content. This is sample content. This is sample content."
-              userImg={userImg}
-              uploadedDate="1 hour ago"
-              userName="Bhathiya Wimalasinghe"
-            />
-          </Grid>
+          {renderPostsCategory("Entertainment")}
         </Grid>
 
         <Box display="flex" justifyContent="space-between" mb={3}>
@@ -137,36 +140,7 @@ export default function Home() {
         </Box>
         <Divider />
         <Grid container spacing={3} marginTop={2} marginBottom={5}>
-          <Grid item xs={12} sm={6} md={4}>
-            <Post
-              img={postImg}
-              title="This is sample Title"
-              content="This is sample content. This is sample content. This is sample content."
-              userImg={userImg}
-              uploadedDate="1 hour ago"
-              userName="Bhathiya Wimalasinghe"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <Post
-              img={postImg}
-              title="This is sample Title"
-              content="This is sample content. This is sample content. This is sample content."
-              userImg={userImg}
-              uploadedDate="1 hour ago"
-              userName="Bhathiya Wimalasinghe"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <Post
-              img={postImg}
-              title="This is sample Title"
-              content="This is sample content. This is sample content. This is sample content."
-              userImg={userImg}
-              uploadedDate="1 hour ago"
-              userName="Bhathiya Wimalasinghe"
-            />
-          </Grid>
+          {renderPostsCategory("Finance")}
         </Grid>
 
         <Box display="flex" justifyContent="space-between" mb={3}>
@@ -177,36 +151,7 @@ export default function Home() {
         </Box>
         <Divider />
         <Grid container spacing={3} marginTop={2} marginBottom={5}>
-          <Grid item xs={12} sm={6} md={4}>
-            <Post
-              img={postImg}
-              title="This is sample Title"
-              content="This is sample content. This is sample content. This is sample content."
-              userImg={userImg}
-              uploadedDate="1 hour ago"
-              userName="Bhathiya Wimalasinghe"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <Post
-              img={postImg}
-              title="This is sample Title"
-              content="This is sample content. This is sample content. This is sample content."
-              userImg={userImg}
-              uploadedDate="1 hour ago"
-              userName="Bhathiya Wimalasinghe"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <Post
-              img={postImg}
-              title="This is sample Title"
-              content="This is sample content. This is sample content. This is sample content."
-              userImg={userImg}
-              uploadedDate="1 hour ago"
-              userName="Bhathiya Wimalasinghe"
-            />
-          </Grid>
+          {renderPostsCategory("Health")}
         </Grid>
 
         <Box display="flex" justifyContent="space-between" mb={3}>
@@ -222,36 +167,7 @@ export default function Home() {
         </Box>
         <Divider />
         <Grid container spacing={3} marginTop={2} marginBottom={5}>
-          <Grid item xs={12} sm={6} md={4}>
-            <Post
-              img={postImg}
-              title="This is sample Title"
-              content="This is sample content. This is sample content. This is sample content."
-              userImg={userImg}
-              uploadedDate="1 hour ago"
-              userName="Bhathiya Wimalasinghe"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <Post
-              img={postImg}
-              title="This is sample Title"
-              content="This is sample content. This is sample content. This is sample content."
-              userImg={userImg}
-              uploadedDate="1 hour ago"
-              userName="Bhathiya Wimalasinghe"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <Post
-              img={postImg}
-              title="This is sample Title"
-              content="This is sample content. This is sample content. This is sample content."
-              userImg={userImg}
-              uploadedDate="1 hour ago"
-              userName="Bhathiya Wimalasinghe"
-            />
-          </Grid>
+          {renderPostsCategory("Sport")}
         </Grid>
 
         {/* Join now banner */}

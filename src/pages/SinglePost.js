@@ -7,7 +7,6 @@ import Post from "../components/Post";
 import { useParams } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase-config";
-import { Height } from "@mui/icons-material";
 import ReactQuill from "react-quill";
 
 export default function SinglePost() {

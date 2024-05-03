@@ -14,7 +14,7 @@ import About from "./pages/About";
 import Profile from "./pages/Profile";
 import AuthorPage from "./pages/AuthorPage";
 
-import { signOut, onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase-config";
 
 function App() {
@@ -40,7 +40,10 @@ function App() {
           <Route path="/authorName" element={<AuthorPage />} />
           <Route path="/write" element={user ? <Write /> : <SignIn />} />
           <Route path="/articles" element={<Posts />} />
-          <Route path="/profile" element={user ? <Profile /> : <SignIn />} />
+          <Route
+            path="/profile"
+            element={user ? <Profile user={user} /> : <SignIn />}
+          />
           <Route path="/signin" element={<SignIn setUser={setUser} />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/article/:postId" element={<SinglePost />} />
