@@ -10,7 +10,6 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase-config";
 
 // Todo: Need to get UserImg from firebase
-// Todo: Need to link ViewAll button
 
 export default function Home() {
   const postCollectionRef = collection(db, "posts");

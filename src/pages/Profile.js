@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Container,
+  Input,
   Stack,
   TextField,
   Typography,
@@ -30,21 +31,27 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 export default function Profile({ user }) {
-  const email = user.email;
+  const currentUser = user.user;
+  const email = currentUser.email;
+  console.log(currentUser.displayName);
 
   const [firstName, setFirstName] = React.useState(
-    user && user.displayName ? user.displayName.split(" ")[0] : ""
+    currentUser && currentUser.displayName
+      ? currentUser.displayName.split(" ")[0]
+      : ""
   );
 
   const [lastName, setLastName] = React.useState(
-    user && user.displayName ? user.displayName.split(" ")[1] : ""
+    currentUser && currentUser.displayName
+      ? currentUser.displayName.split(" ")[1]
+      : ""
   );
 
   const [phoneNumber, setPhoneNumber] = React.useState(
-    user && user.phoneNumber ? user.phoneNumber : ""
+    currentUser && currentUser.phoneNumber ? currentUser.phoneNumber : ""
   );
   const [photoURL, setPhotoURL] = React.useState(
-    user && user.photoURL ? user.photoURL : null
+    currentUser && currentUser.photoURL ? currentUser.photoURL : null
   );
 
   const [description, setDescription] = React.useState("");
@@ -67,7 +74,7 @@ export default function Profile({ user }) {
 
     try {
       // handle profile pic upload
-      if (!user.photoURL && photoURL) {
+      if (!currentUser.photoURL && photoURL) {
         console.log(file + "something");
         const storageRef = ref(storage, `users/${file.name}`);
         await uploadBytes(storageRef, file);
@@ -81,7 +88,7 @@ export default function Profile({ user }) {
 
         await addDoc(postCollectionRef, {
           description,
-          userId: user.uid,
+          userId: currentUser.uid,
         });
       }
 
@@ -121,16 +128,27 @@ export default function Profile({ user }) {
         sx={{
           display: "flex",
           justifyContent: "space-around",
+          alignItems: "center",
+          flexDirection: { sm: "column", md: "row" },
         }}
       >
-        <Box>
+        <Box marginBottom={3}>
           <img
             alt="username"
             src={photoURL || userImg}
-            style={{ width: "300px", borderRadius: "10px", maxHeight: "500px" }}
+            style={{
+              width: "300px",
+              borderRadius: "10px",
+              maxHeight: "350px",
+            }}
           />
 
-          <Box display="flex" justifyContent="space-around" marginTop={2}>
+          <Box
+            maxWidth="300px"
+            display="flex"
+            justifyContent="space-around"
+            marginTop={2}
+          >
             <Button
               component="label"
               tabIndex={-1}
@@ -176,7 +194,6 @@ export default function Profile({ user }) {
           <TextField
             disabled
             id="outlined-basic"
-            label="Your Email"
             variant="outlined"
             value={email}
           />
