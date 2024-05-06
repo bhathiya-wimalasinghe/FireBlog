@@ -12,8 +12,16 @@ import Post from "../components/Post";
 import userImg from "../images/Bhathiya_Wimalasinghe.jpg";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase-config";
+import { useLocation } from "react-router-dom";
+
+// Todo: Need to get UserImg from firebase
 
 export default function Posts() {
+  // Get relevent query parameters from link
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const category = queryParams.get("category");
+
   const postCollectionRef = collection(db, "posts");
 
   const [postsList, setPostsList] = React.useState(null);
@@ -49,6 +57,10 @@ export default function Posts() {
       postsList.filter((post) => post.category === selectedCategory)
     );
   }, [selectedCategory]);
+
+  React.useEffect(() => {
+    toggleCategoryButtons(category);
+  }, [postsList]);
 
   const getPosts = async () => {
     try {

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
 import backgroundImg from "../images/header_image.jpg";
 import logo from "../images/fireblog-logo.svg";
@@ -9,11 +10,12 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase-config";
 
 // Todo: Need to get UserImg from firebase
+// Todo: Need to link ViewAll button
 
 export default function Home() {
   const postCollectionRef = collection(db, "posts");
 
-  const [postsList, setPostsList] = React.useState(null);
+  const [postsList, setPostsList] = React.useState([]);
 
   React.useEffect(() => {
     getPosts();
@@ -112,7 +114,11 @@ export default function Home() {
           <Typography component="h2" variant="h4">
             Technology
           </Typography>
-          <Button variant="outlined" onClick={getPosts}>
+          <Button
+            variant="outlined"
+            component={Link}
+            to={`/articles?category=Technology`}
+          >
             View All
           </Button>
         </Box>
@@ -125,7 +131,13 @@ export default function Home() {
           <Typography component="h2" variant="h4">
             Entertainment
           </Typography>
-          <Button variant="outlined">View All</Button>
+          <Button
+            variant="outlined"
+            component={Link}
+            to={`/articles?category=Entertainment`}
+          >
+            View All
+          </Button>
         </Box>
         <Divider />
         <Grid container spacing={3} marginTop={2} marginBottom={5}>
@@ -136,7 +148,13 @@ export default function Home() {
           <Typography component="h2" variant="h4">
             Finance
           </Typography>
-          <Button variant="outlined">View All</Button>
+          <Button
+            variant="outlined"
+            component={Link}
+            to={`/articles?category=Finance`}
+          >
+            View All
+          </Button>
         </Box>
         <Divider />
         <Grid container spacing={3} marginTop={2} marginBottom={5}>
@@ -147,7 +165,13 @@ export default function Home() {
           <Typography component="h2" variant="h4">
             Health
           </Typography>
-          <Button variant="outlined">View All</Button>
+          <Button
+            variant="outlined"
+            component={Link}
+            to={`/articles?category=Health`}
+          >
+            View All
+          </Button>
         </Box>
         <Divider />
         <Grid container spacing={3} marginTop={2} marginBottom={5}>
@@ -161,6 +185,8 @@ export default function Home() {
           <Button
             variant="outlined"
             sx={{ color: "black", borderColor: "black" }}
+            component={Link}
+            to={`/articles?category=Sport`}
           >
             View All
           </Button>
@@ -204,6 +230,8 @@ export default function Home() {
           </Typography>
           <Button
             variant="contained"
+            component={Link}
+            to="/signup"
             sx={{
               borderRadius: "20px",
               width: "200px",
