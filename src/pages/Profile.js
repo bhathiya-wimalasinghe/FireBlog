@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Container,
-  Input,
   Stack,
   TextField,
   Typography,
@@ -14,7 +13,14 @@ import { getAuth, updateProfile } from "firebase/auth";
 import { styled } from "@mui/material/styles";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage, db } from "../firebase-config";
-import { addDoc, collection } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 
@@ -30,29 +36,54 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-export default function Profile({ user }) {
-  const currentUser = user.user;
-  const email = currentUser.email;
-  console.log(currentUser.displayName);
+export default function Profile() {
+  const auth = getAuth();
+  const user = auth.currentUser;
+
+  const email = user.email;
+
+  const userDetailsCollectionRef = collection(db, "userDescription");
+
+  // get user detail from firestore
+  React.useEffect(() => {
+    getUserDetails();
+  }, []);
+
+  const getUserDetails = async () => {
+    try {
+      const q = query(
+        userDetailsCollectionRef,
+        where("userId", "==", user.uid)
+      );
+
+      const snapshot = await getDocs(q);
+      if (!snapshot.empty) {
+        const fields = snapshot.docs[0]._document.data.value.mapValue.fields;
+        const docId = snapshot.docs[0].id;
+        console.log("This is", docId);
+        setUserDetailsDocumentId(docId);
+        setDescription(fields.description.stringValue);
+        setPhoneNumber(fields.phoneNumber.stringValue);
+      }
+    } catch (error) {
+      console.error("Eroor fetching user details ", error);
+    }
+  };
 
   const [firstName, setFirstName] = React.useState(
-    currentUser && currentUser.displayName
-      ? currentUser.displayName.split(" ")[0]
-      : ""
+    user && user.displayName ? user.displayName.split(" ")[0] : ""
   );
 
   const [lastName, setLastName] = React.useState(
-    currentUser && currentUser.displayName
-      ? currentUser.displayName.split(" ")[1]
-      : ""
+    user && user.displayName ? user.displayName.split(" ")[1] : ""
   );
 
-  const [phoneNumber, setPhoneNumber] = React.useState(
-    currentUser && currentUser.phoneNumber ? currentUser.phoneNumber : ""
-  );
+  const [phoneNumber, setPhoneNumber] = React.useState("");
   const [photoURL, setPhotoURL] = React.useState(
-    currentUser && currentUser.photoURL ? currentUser.photoURL : null
+    user && user.photoURL ? user.photoURL : null
   );
+
+  const [userDetailsDocumentId, setUserDetailsDocumentId] = React.useState("");
 
   const [description, setDescription] = React.useState("");
 
@@ -74,7 +105,7 @@ export default function Profile({ user }) {
 
     try {
       // handle profile pic upload
-      if (!currentUser.photoURL && photoURL) {
+      if (!user.photoURL && photoURL) {
         console.log(file + "something");
         const storageRef = ref(storage, `users/${file.name}`);
         await uploadBytes(storageRef, file);
@@ -82,13 +113,14 @@ export default function Profile({ user }) {
         setPhotoURL(imgUrl);
       }
 
-      // handle description upload
-      if (description) {
-        const postCollectionRef = collection(db, "userDescription");
+      // handle description and phone number upload
+      if (description || phoneNumber) {
+        console.log(userDetailsDocumentId);
 
-        await addDoc(postCollectionRef, {
+        const userDocRef = doc(db, "userDescription", userDetailsDocumentId);
+        await updateDoc(userDocRef, {
           description,
-          userId: currentUser.uid,
+          phoneNumber,
         });
       }
 
@@ -97,7 +129,6 @@ export default function Profile({ user }) {
 
       await updateProfile(user, {
         displayName: fullName,
-        phoneNumber,
         photoURL,
       });
       setAlertMessage("Your profile is successfully updated");
