@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Container,
+  Grid,
   Stack,
   TextField,
   Typography,
@@ -23,6 +24,7 @@ import {
 } from "firebase/firestore";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import Post from "../components/Post";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -44,9 +46,12 @@ export default function Profile() {
 
   const userDetailsCollectionRef = collection(db, "userDescription");
 
+  const postCollectionRef = collection(db, "posts");
+
   // get user detail from firestore
   React.useEffect(() => {
     getUserDetails();
+    getArticlesByUser();
   }, []);
 
   const getUserDetails = async () => {
@@ -60,13 +65,51 @@ export default function Profile() {
       if (!snapshot.empty) {
         const fields = snapshot.docs[0]._document.data.value.mapValue.fields;
         const docId = snapshot.docs[0].id;
-        console.log("This is", docId);
         setUserDetailsDocumentId(docId);
         setDescription(fields.description.stringValue);
         setPhoneNumber(fields.phoneNumber.stringValue);
       }
     } catch (error) {
       console.error("Eroor fetching user details ", error);
+    }
+  };
+
+  const [articlesByUser, setArticlesByUser] = React.useState([]);
+
+  const getArticlesByUser = async () => {
+    try {
+      const q = query(postCollectionRef, where("userId", "==", user.uid));
+      const snapshot = await getDocs(q);
+
+      if (!snapshot.empty) {
+        const postsData = [];
+        snapshot.forEach((doc) => {
+          const postData = doc.data();
+
+          const uploadedDate = new Date(postData.uploadedDateTime);
+          const formattedDate = uploadedDate.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          });
+
+          const postInfo = {
+            id: doc.id,
+            imageUrl: postData.imageUrl,
+            title: postData.title,
+            content: postData.content,
+            uploadedDateTime: formattedDate,
+            authorName: postData.authorName,
+            category: postData.category,
+          };
+
+          postsData.push(postInfo);
+        });
+        setArticlesByUser(postsData);
+        console.log(articlesByUser);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -248,19 +291,6 @@ export default function Profile() {
           <Button variant="contained" onClick={handleUpdate}>
             Update
           </Button>
-
-          <Button variant="contained">Change Password</Button>
-
-          <TextField
-            id="outlined-basic"
-            label="Enter New Password"
-            variant="outlined"
-          />
-          <TextField
-            id="outlined-basic"
-            label="Confirm Password"
-            variant="outlined"
-          />
         </Stack>
         <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
           <Alert
@@ -275,6 +305,37 @@ export default function Profile() {
           </Alert>
         </Snackbar>
       </Container>
+      {articlesByUser.length > 0 && (
+        <Container sx={{ marginTop: "100px", marginBottom: "40px" }}>
+          <Typography component="h1" variant="h3">
+            My Articles
+          </Typography>
+          <Grid container spacing={3} marginTop={2}>
+            {articlesByUser.map((post) => (
+              <Grid
+                item
+                key={post.id}
+                xs={12}
+                sm={6}
+                md={4}
+                display="flex"
+                justifyContent="center"
+              >
+                <Post
+                  img={post.imageUrl}
+                  title={post.title}
+                  content={post.content}
+                  userImg={photoURL}
+                  uploadedDate={post.uploadedDateTime}
+                  userName={post.authorName}
+                  category={post.category}
+                  id={post.id}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
+      )}
     </Box>
   );
 }

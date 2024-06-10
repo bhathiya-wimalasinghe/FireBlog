@@ -87,13 +87,14 @@ export default function TopBar({ user }) {
                     </Typography>
                   </Link>
                 </MenuItem>
-                <MenuItem sx={{ py: "6px", px: "12px" }}>
+                {/* This page still under developing. */}
+                {/* <MenuItem sx={{ py: "6px", px: "12px" }}>
                   <Link style={{ textDecoration: "none" }} to="/authors">
                     <Typography variant="body2" color="text.primary">
                       Authors
                     </Typography>
                   </Link>
-                </MenuItem>
+                </MenuItem> */}
                 <MenuItem sx={{ py: "6px", px: "12px" }}>
                   <Link style={{ textDecoration: "none" }} to="/write">
                     <Typography variant="body2" color="text.primary">
