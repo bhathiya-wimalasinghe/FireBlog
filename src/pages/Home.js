@@ -4,15 +4,14 @@ import Box from "@mui/material/Box";
 import backgroundImg from "../images/header_image.jpg";
 import logo from "../images/fireblog-logo.svg";
 import { Button, Container, Divider, Grid, Typography } from "@mui/material";
-import userImg from "../images/Bhathiya_Wimalasinghe.jpg";
 import Post from "../components/Post";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../firebase-config";
-
-// Todo: Need to get UserImg from firebase
+import userImage from "../images/user.jpg";
 
 export default function Home() {
   const postCollectionRef = collection(db, "posts");
+  const userDetailsCollectionRef = collection(db, "userDescription");
 
   const [postsList, setPostsList] = React.useState([]);
 
@@ -21,9 +20,15 @@ export default function Home() {
   }, []);
 
   const getPosts = async () => {
-    console.log("getposts");
     try {
       const querySnapshot = await getDocs(postCollectionRef);
+      const userDetailsSnapshot = await getDocs(userDetailsCollectionRef);
+
+      const userData = {};
+      userDetailsSnapshot.forEach((doc) => {
+        const fields = doc._document.data.value.mapValue.fields;
+        userData[fields.userId.stringValue] = fields.photoURL.stringValue;
+      });
 
       const postsData = [];
 
@@ -45,6 +50,8 @@ export default function Home() {
           uploadedDateTime: formattedDate,
           authorName: postData.authorName,
           category: postData.category,
+          userId: postData.userId,
+          userImg: userData[postData.userId] || null,
         };
 
         postsData.push(postInfo);
@@ -62,23 +69,20 @@ export default function Home() {
 
     return (
       <>
-        {filteredPosts.map(
-          (post, index) =>
-            (index < 3 || filteredPosts.length <= 3) && (
-              <Grid key={post.id} item xs={12} sm={6} md={4}>
-                <Post
-                  img={post.imageUrl}
-                  title={post.title}
-                  content={post.content}
-                  userImg={userImg}
-                  uploadedDate={post.uploadedDateTime}
-                  userName={post.authorName}
-                  category={post.category}
-                  id={post.id}
-                />
-              </Grid>
-            )
-        )}
+        {filteredPosts.slice(0, 3).map((post) => (
+          <Grid key={post.id} item xs={12} sm={6} md={4}>
+            <Post
+              img={post.imageUrl}
+              title={post.title}
+              content={post.content}
+              uploadedDate={post.uploadedDateTime}
+              userImg={post.userImg ? post.userImg : userImage}
+              userName={post.authorName}
+              category={post.category}
+              id={post.id}
+            />
+          </Grid>
+        ))}
       </>
     );
   };

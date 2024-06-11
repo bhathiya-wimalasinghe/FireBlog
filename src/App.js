@@ -20,19 +20,18 @@ import { auth } from "./firebase-config";
 function App() {
   const [user, setUser] = React.useState(null);
 
-  React.useEffect(() => {
-    const unsbscribe = onAuthStateChanged(auth, (user) =>
-      user ? setUser(user) : setUser(null)
-    );
-
-    return () => unsbscribe();
-  }, []);
+  // React.useEffect(() => {
+  //   const unsbscribe = onAuthStateChanged(auth, (user) =>
+  //     user ? setUser(user) : setUser(null)
+  //   );
+  //   return () => unsbscribe();
+  // }, []);
 
   return (
     <div>
       <Router>
         <ScrollToTop />
-        <TopBar user={user} />
+        <TopBar user={user} setUser={setUser} />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />

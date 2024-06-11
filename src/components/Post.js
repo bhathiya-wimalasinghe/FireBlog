@@ -8,8 +8,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
 export default function Post(props) {
-  const { img, title, content, userImg, uploadedDate, userName, category, id } =
-    props;
+  const { img, title, userImg, uploadedDate, userName, category, id } = props;
 
   return (
     <Box>
@@ -92,7 +91,7 @@ Post.propTypes = {
   img: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   content: PropTypes.string.isRequired,
-  userImg: PropTypes.string,
+  userImg: PropTypes.string.isRequired,
   uploadedDate: PropTypes.string,
   userName: PropTypes.string,
   category: PropTypes.string,

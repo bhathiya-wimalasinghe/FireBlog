@@ -164,6 +164,7 @@ export default function Profile() {
         await updateDoc(userDocRef, {
           description,
           phoneNumber,
+          photoURL,
         });
       }
 

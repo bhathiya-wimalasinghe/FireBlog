@@ -12,7 +12,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Drawer from "@mui/material/Drawer";
 import MenuIcon from "@mui/icons-material/Menu";
 import img from "../images/FireBlog.svg";
-import userImage from "../images/Bhathiya_Wimalasinghe.jpg";
+import userImage from "../images/user.jpg";
 import { Avatar } from "@mui/material";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase-config";
@@ -23,12 +23,20 @@ const logoStyle = {
   cursor: "pointer",
 };
 
-export default function TopBar({ user }) {
+export default function TopBar({ user, setUser }) {
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
 
+  const [userImg, setUserImg] = React.useState(null);
+
+  React.useEffect(() => {
+    setUserImg(user && user.user.photoURL ? user.user.photoURL : userImage);
+  }, [user]);
+
   const handleSignOut = () => {
+    console.log("signout");
     signOut(auth);
+    setUser(null);
     navigate("/");
   };
 
@@ -134,7 +142,7 @@ export default function TopBar({ user }) {
                   >
                     <Avatar
                       alt="username"
-                      src={userImage}
+                      src={userImg}
                       sx={{ marginRight: "20px" }}
                     />
                     My Profile
@@ -184,7 +192,7 @@ export default function TopBar({ user }) {
                 {user && (
                   <Avatar
                     alt="username"
-                    src={userImage}
+                    src={userImg}
                     sx={{ marginRight: "20px" }}
                   />
                 )}
