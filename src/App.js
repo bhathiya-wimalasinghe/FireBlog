@@ -35,14 +35,18 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/authors" element={<Authors />} />
-          <Route path="/authorName" element={<AuthorPage />} />
-          <Route path="/write" element={user ? <Write /> : <SignIn />} />
+          <Route path="/article/:postId" element={<SinglePost />} />
           <Route path="/articles" element={<Posts />} />
+          <Route path="/authorName" element={<AuthorPage />} />
+          <Route path="/authors" element={<Authors />} />
+          <Route path="/edit/:postId" element={<Write isEdit={true} />} />
           <Route path="/profile" element={user ? <Profile /> : <SignIn />} />
           <Route path="/signin" element={<SignIn setUser={setUser} />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/article/:postId" element={<SinglePost />} />
+          <Route
+            path="/write"
+            element={user ? <Write isEdit={false} /> : <SignIn />}
+          />
         </Routes>
         <Footer />
       </Router>

@@ -127,7 +127,12 @@ export default function Post(props) {
             justifyContent="center"
             marginTop="10px"
           >
-            <Button style={{ width: "100px" }} variant="outlined">
+            <Button
+              component={Link}
+              to={`/edit/${id}`}
+              style={{ width: "100px" }}
+              variant="outlined"
+            >
               <Edit />
             </Button>
             <Button

@@ -10,7 +10,7 @@ import {
   FormControl,
   Alert,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import ReactQuill from "react-quill";
 import TextField from "@mui/material/TextField";
 import { styled } from "@mui/material/styles";
@@ -18,20 +18,50 @@ import "react-quill/dist/quill.snow.css";
 
 import { storage, db, auth } from "../firebase-config";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { addDoc, collection } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
+import { addDoc, collection, doc, getDoc, updateDoc } from "firebase/firestore";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { CircularProgress } from "@mui/material";
 
-export default function Write() {
+export default function Write({ isEdit }) {
+  const { postId } = useParams();
+
   const [content, setContent] = React.useState("");
   const [category, setCategory] = React.useState("");
   const [image, setImage] = React.useState(null);
   const [title, setTitle] = React.useState("");
   const [file, setFile] = React.useState(null);
   const [error, setError] = React.useState("");
+  const [post, setPost] = React.useState(null);
 
   const [loading, setLoading] = React.useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const getPost = async () => {
+      try {
+        const docRef = doc(db, "posts", postId);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists) {
+          let tempPost = docSnap.data();
+          setPost(tempPost);
+          setContent(tempPost.content);
+          setCategory(tempPost.category);
+          setImage(tempPost.imageUrl);
+          setTitle(tempPost.title);
+        } else {
+          setError("This document does not exist.");
+        }
+      } catch (error) {
+        setError("Something went wrong! Please try again later.");
+        console.log(error);
+      }
+    };
+
+    if (isEdit) {
+      getPost();
+    }
+  }, [postId]);
 
   const handleImage = (e) => {
     const file = e.target.files[0];
@@ -40,30 +70,44 @@ export default function Write() {
     setFile(file);
   };
 
-  const navigate = useNavigate();
-
   const handleUpload = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
       //handle image upload
-      const storageRef = ref(storage, `images/${file.name}`);
-      await uploadBytes(storageRef, file);
-      const imageUrl = await getDownloadURL(storageRef);
+      if (file) {
+        const storageRef = ref(storage, `images/${title}/${file.name}`);
+        await uploadBytes(storageRef, file);
+        const imageUrl = await getDownloadURL(storageRef);
+        setImage(imageUrl);
+      }
 
-      // handle post upload
-      const postCollectionRef = collection(db, "posts");
+      if (isEdit) {
+        // handle post update
+        const postDocRef = doc(db, "posts", postId);
+        await updateDoc(postDocRef, {
+          ...post,
+          title,
+          content,
+          category,
+          image,
+          uploadedDateTime: new Date().toISOString(),
+        });
+      } else {
+        // handle post upload
+        const postCollectionRef = collection(db, "posts");
 
-      await addDoc(postCollectionRef, {
-        title,
-        category,
-        content,
-        imageUrl,
-        authorName: auth.currentUser.displayName,
-        userId: auth.currentUser.uid,
-        uploadedDateTime: new Date().toISOString(),
-      });
+        await addDoc(postCollectionRef, {
+          title,
+          category,
+          content,
+          image,
+          authorName: auth.currentUser.displayName,
+          userId: auth.currentUser.uid,
+          uploadedDateTime: new Date().toISOString(),
+        });
+      }
 
       setTitle("");
       setCategory("");
@@ -74,7 +118,7 @@ export default function Write() {
       navigate("/");
     } catch (err) {
       setError("Something went wrong. Try again later");
-      console.log(error);
+      console.log(err);
     } finally {
       setLoading(false);
     }
@@ -111,7 +155,7 @@ export default function Write() {
     <Container sx={{ marginTop: 2, minHeight: "100vh" }}>
       <Box height="100px"></Box>
       <Typography margin={1} component="h1" variant="h4">
-        Write
+        {isEdit ? "Edit" : "Write"}
       </Typography>
       <Box
         display="flex"
@@ -199,7 +243,7 @@ export default function Write() {
               loading ? <CircularProgress size={24} color="inherit" /> : null
             }
           >
-            {loading ? "Publishing..." : "Publish"}{" "}
+            {loading ? "Publishing..." : isEdit ? "Update" : "Publish"}{" "}
           </Button>
         </Box>
       </Box>
