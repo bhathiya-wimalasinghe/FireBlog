@@ -16,6 +16,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage, db } from "../firebase-config";
 import {
   collection,
+  deleteDoc,
   doc,
   getDocs,
   query,
@@ -123,7 +124,7 @@ export default function Profile() {
 
   const [phoneNumber, setPhoneNumber] = React.useState("");
   const [photoURL, setPhotoURL] = React.useState(
-    user && user.photoURL ? user.photoURL : null
+    user && user.photoURL ? user.photoURL : userImg
   );
 
   const [userDetailsDocumentId, setUserDetailsDocumentId] = React.useState("");
@@ -190,6 +191,19 @@ export default function Profile() {
     }
 
     setOpen(false);
+  };
+
+  const handlePostDelete = async (postId, postTitle) => {
+    try {
+      // Should delete image related to post first
+      const postDocRef = doc(db, "posts", postId);
+      await deleteDoc(postDocRef);
+      setArticlesByUser((prevArticles) => {
+        prevArticles.filter((post) => post.id !== postId);
+      });
+    } catch (error) {
+      console.log("Something went wrong. Please try again later ", error);
+    }
   };
 
   return (
@@ -306,7 +320,7 @@ export default function Profile() {
           </Alert>
         </Snackbar>
       </Container>
-      {articlesByUser.length > 0 && (
+      {articlesByUser && articlesByUser.length > 0 && (
         <Container sx={{ marginTop: "100px", marginBottom: "40px" }}>
           <Typography component="h1" variant="h3">
             My Articles
@@ -323,6 +337,7 @@ export default function Profile() {
                 justifyContent="center"
               >
                 <Post
+                  isAuthor={true}
                   img={post.imageUrl}
                   title={post.title}
                   content={post.content}
@@ -331,6 +346,7 @@ export default function Profile() {
                   userName={post.authorName}
                   category={post.category}
                   id={post.id}
+                  handlePostDelete={handlePostDelete}
                 />
               </Grid>
             ))}

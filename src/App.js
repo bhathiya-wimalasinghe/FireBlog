@@ -14,8 +14,8 @@ import About from "./pages/About";
 import Profile from "./pages/Profile";
 import AuthorPage from "./pages/AuthorPage";
 
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./firebase-config";
+// import { onAuthStateChanged } from "firebase/auth";
+// import { auth } from "./firebase-config";
 
 function App() {
   const [user, setUser] = React.useState(null);

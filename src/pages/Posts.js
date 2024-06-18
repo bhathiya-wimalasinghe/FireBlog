@@ -14,8 +14,6 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase-config";
 import { useLocation } from "react-router-dom";
 
-// Todo: Need to get UserImg from firebase
-
 export default function Posts() {
   // Get relevent query parameters from link
   const location = useLocation();
@@ -23,6 +21,7 @@ export default function Posts() {
   const category = queryParams.get("category");
 
   const postCollectionRef = collection(db, "posts");
+  const userDetailsCollectionRef = collection(db, "userDescription");
 
   const [postsList, setPostsList] = React.useState(null);
   const [btnVariant, setBtnVariant] = React.useState({
@@ -64,8 +63,14 @@ export default function Posts() {
 
   const getPosts = async () => {
     try {
-      // const q = query(postCollectionRef, where("category", "==", "Technology"));
       const querySnapshot = await getDocs(postCollectionRef);
+      const userDetailsSnapshot = await getDocs(userDetailsCollectionRef);
+
+      const userData = {};
+      userDetailsSnapshot.forEach((doc) => {
+        const fields = doc._document.data.value.mapValue.fields;
+        userData[fields.userId.stringValue] = fields.photoURL.stringValue;
+      });
 
       const postsData = [];
 
@@ -78,6 +83,7 @@ export default function Posts() {
           month: "long",
           day: "numeric",
         });
+
         const postInfo = {
           id: doc.id,
           imageUrl: postData.imageUrl,
@@ -86,12 +92,15 @@ export default function Posts() {
           uploadedDateTime: formattedDate,
           authorName: postData.authorName,
           category: postData.category,
+          userId: postData.userId,
+          userImg: userData[postData.userId] || null,
         };
+
         postsData.push(postInfo);
       });
       setPostsList(postsData);
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -246,7 +255,7 @@ export default function Posts() {
                 img={post.imageUrl}
                 title={post.title}
                 content={post.content}
-                userImg={userImg}
+                userImg={post.userImg ? post.userImg : userImg}
                 uploadedDate={post.uploadedDateTime}
                 userName={post.authorName}
                 category={post.category}

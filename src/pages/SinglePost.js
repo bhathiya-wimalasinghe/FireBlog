@@ -1,45 +1,124 @@
-import { Box, Container, Divider, Grid, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Divider,
+  Grid,
+  Stack,
+  Typography,
+} from "@mui/material";
 import React, { useEffect } from "react";
-import postImg from "../images/post.jpg";
 import AuthorMini from "../components/AuthorMini";
-import userImg from "../images/Bhathiya_Wimalasinghe.jpg";
+import userImg from "../images/user.jpg";
 import Post from "../components/Post";
 import { useParams } from "react-router-dom";
-import { doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { db } from "../firebase-config";
 import ReactQuill from "react-quill";
+import { Delete, Edit } from "@mui/icons-material";
 
 export default function SinglePost() {
   const { postId } = useParams();
   const [post, setPost] = React.useState(null);
   const [error, setError] = React.useState(null);
+  const [userImage, setUserImage] = React.useState(userImg);
+  const [userId, setUserId] = React.useState(null);
+  const [articlesByUser, setArticlesByUser] = React.useState([]);
+
+  const userDetailsCollectionRef = collection(db, "userDescription");
+  const postCollectionRef = collection(db, "posts");
 
   useEffect(() => {
-    getPost();
-  }, []);
-
-  const getPost = async () => {
-    try {
-      const docRef = doc(db, "posts", postId);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists) {
-        const tempPost = docSnap.data();
-        const uploadedDate = new Date(tempPost.uploadedDateTime);
-        const formattedDate = uploadedDate.toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        });
-        tempPost.uploadedDateTime = formattedDate;
-        setPost(tempPost);
-      } else {
-        setError("This document does not exist.");
+    const getPost = async () => {
+      try {
+        const docRef = doc(db, "posts", postId);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists) {
+          let tempPost = docSnap.data();
+          const uploadedDate = new Date(tempPost.uploadedDateTime);
+          const formattedDate = uploadedDate.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          });
+          tempPost.uploadedDateTime = formattedDate;
+          setPost(tempPost);
+          setUserId(tempPost.userId);
+        } else {
+          setError("This document does not exist.");
+        }
+      } catch (error) {
+        setError("Something went wrong! Please try again later.");
+        console.log(error);
       }
-    } catch (error) {
-      setError("Something went wrong! Please try again later");
-      console.log(error);
-    }
-  };
+    };
+
+    getPost();
+  }, [postId]);
+
+  useEffect(() => {
+    const getUserDetailsAndArticles = async () => {
+      if (userId) {
+        try {
+          // Fetch user details
+          const q = query(
+            userDetailsCollectionRef,
+            where("userId", "==", userId)
+          );
+          const snapshot = await getDocs(q);
+          if (!snapshot.empty) {
+            const fields =
+              snapshot.docs[0]._document.data.value.mapValue.fields;
+            setUserImage(fields.photoURL.stringValue);
+          }
+
+          // Fetch articles by user
+          const articlesQuery = query(
+            postCollectionRef,
+            where("userId", "==", userId)
+          );
+          const articlesSnapshot = await getDocs(articlesQuery);
+          if (!articlesSnapshot.empty) {
+            const postsData = [];
+            articlesSnapshot.forEach((doc) => {
+              const postData = doc.data();
+              const uploadedDate = new Date(postData.uploadedDateTime);
+              const formattedDate = uploadedDate.toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              });
+              const postInfo = {
+                id: doc.id,
+                imageUrl: postData.imageUrl,
+                title: postData.title,
+                content: postData.content,
+                uploadedDateTime: formattedDate,
+                authorName: postData.authorName,
+                category: postData.category,
+              };
+              postsData.push(postInfo);
+            });
+            setArticlesByUser(postsData);
+          }
+        } catch (error) {
+          console.log(
+            "Error occurs while getting user details or articles ",
+            error
+          );
+        }
+      }
+    };
+
+    getUserDetailsAndArticles();
+  }, [userId]);
 
   return (
     <div>
@@ -61,51 +140,50 @@ export default function SinglePost() {
           >
             <img width="100%" src={post.imageUrl} alt="Post" />;
           </Box>
-          <Box display="flex" justifyContent="center">
+          <Box display="flex" justifyContent="center" alignItems="center">
             <AuthorMini
               name={post.authorName}
               publishedDate={post.uploadedDateTime}
-              userImg={userImg}
+              userImg={userImage}
             />
           </Box>
           <Divider />
-          {/* <Typography textAlign="center" margin={1} component="p">
-            <ReactQuill value={post.content} readOnly={true} theme="bubble" />
-          </Typography> */}
+
           <ReactQuill value={post.content} readOnly={true} theme="bubble" />
 
           <Divider />
           <Box>
-            <Typography
-              marginTop={4}
-              component="h2"
-              sx={{ fontSize: { sm: "30px", xs: "20px" }, fontWeight: "600" }}
-            >
-              Other articles published by Bhathiya Wimalasinghe
-            </Typography>
-            <Grid container spacing={3} marginTop={2}>
-              <Grid item xs={12} sm={6} md={4}>
-                <Post
-                  img={postImg}
-                  title="This is sample Title"
-                  content="This is sample content. This is sample content. This is sample content."
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                <Post
-                  img={postImg}
-                  title="This is sample Title"
-                  content="This is sample content. This is sample content. This is sample content."
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                <Post
-                  img={postImg}
-                  title="This is sample Title"
-                  content="This is sample content. This is sample content. This is sample content."
-                />
-              </Grid>
-            </Grid>
+            {articlesByUser.length > 0 && (
+              <Container sx={{ marginTop: "100px", marginBottom: "40px" }}>
+                <Typography component="h2" variant="h4">
+                  Other Articles By {post.authorName}
+                </Typography>
+                <Grid container spacing={3} marginTop={2}>
+                  {articlesByUser.map((post) => (
+                    <Grid
+                      item
+                      key={post.id}
+                      xs={12}
+                      sm={6}
+                      md={4}
+                      display="flex"
+                      justifyContent="center"
+                    >
+                      <Post
+                        img={post.imageUrl}
+                        title={post.title}
+                        content={post.content}
+                        userImg={userImage}
+                        uploadedDate={post.uploadedDateTime}
+                        userName={post.authorName}
+                        category={post.category}
+                        id={post.id}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              </Container>
+            )}
           </Box>
         </Container>
       ) : (

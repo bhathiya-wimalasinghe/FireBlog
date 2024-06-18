@@ -5,7 +5,7 @@ import backgroundImg from "../images/header_image.jpg";
 import logo from "../images/fireblog-logo.svg";
 import { Button, Container, Divider, Grid, Typography } from "@mui/material";
 import Post from "../components/Post";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase-config";
 import userImage from "../images/user.jpg";
 
