@@ -1,4 +1,4 @@
-import { Avatar, Paper, Box, Typography } from "@mui/material";
+import { Avatar, Box, Typography } from "@mui/material";
 import React from "react";
 import PropTypes from "prop-types";
 

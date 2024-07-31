@@ -14,18 +14,8 @@ import About from "./pages/About";
 import Profile from "./pages/Profile";
 import AuthorPage from "./pages/AuthorPage";
 
-// import { onAuthStateChanged } from "firebase/auth";
-// import { auth } from "./firebase-config";
-
 function App() {
   const [user, setUser] = React.useState(null);
-
-  // React.useEffect(() => {
-  //   const unsbscribe = onAuthStateChanged(auth, (user) =>
-  //     user ? setUser(user) : setUser(null)
-  //   );
-  //   return () => unsbscribe();
-  // }, []);
 
   return (
     <div>

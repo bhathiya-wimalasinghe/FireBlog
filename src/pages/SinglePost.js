@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  Container,
-  Divider,
-  Grid,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Container, Divider, Grid, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import AuthorMini from "../components/AuthorMini";
 import userImg from "../images/user.jpg";
@@ -22,7 +14,6 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase-config";
 import ReactQuill from "react-quill";
-import { Delete, Edit } from "@mui/icons-material";
 
 export default function SinglePost() {
   const { postId } = useParams();
@@ -49,6 +40,7 @@ export default function SinglePost() {
             day: "numeric",
           });
           tempPost.uploadedDateTime = formattedDate;
+
           setPost(tempPost);
           setUserId(tempPost.userId);
         } else {

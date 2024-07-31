@@ -29,6 +29,7 @@ export default function Write({ isEdit }) {
   const [content, setContent] = React.useState("");
   const [category, setCategory] = React.useState("");
   const [image, setImage] = React.useState(null);
+  const [imageUrl, setImageUrl] = React.useState(null);
   const [title, setTitle] = React.useState("");
   const [file, setFile] = React.useState(null);
   const [error, setError] = React.useState("");
@@ -79,8 +80,8 @@ export default function Write({ isEdit }) {
       if (file) {
         const storageRef = ref(storage, `images/${title}/${file.name}`);
         await uploadBytes(storageRef, file);
-        const imageUrl = await getDownloadURL(storageRef);
-        setImage(imageUrl);
+        const imgUrl = await getDownloadURL(storageRef);
+        setImageUrl(imgUrl);
       }
 
       if (isEdit) {
@@ -91,7 +92,7 @@ export default function Write({ isEdit }) {
           title,
           content,
           category,
-          image,
+          imageUrl,
           uploadedDateTime: new Date().toISOString(),
         });
       } else {
@@ -102,7 +103,7 @@ export default function Write({ isEdit }) {
           title,
           category,
           content,
-          image,
+          imageUrl,
           authorName: auth.currentUser.displayName,
           userId: auth.currentUser.uid,
           uploadedDateTime: new Date().toISOString(),
@@ -127,7 +128,8 @@ export default function Write({ isEdit }) {
   const modules = {
     toolbar: [
       [{ font: [] }],
-      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+      [{ size: ["small", false, "large", "huge"] }],
+      [{ header: [1, 2, 3, false] }],
       ["bold", "italic", "underline", "strike"],
       [{ color: [] }, { background: [] }],
       [{ script: "sub" }, { script: "super" }],
